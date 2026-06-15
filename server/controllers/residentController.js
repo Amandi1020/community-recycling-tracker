@@ -99,3 +99,22 @@ export const postListing = async (req, res) => {
     res.status(500).json({ message: 'Server error' })
   }
 }
+
+export const getMyListings = async (req, res) => {
+  const userId = req.user.id
+
+  try {
+    const [rows] = await db.execute(`
+      SELECT l.*, c.name AS category_name
+      FROM listings l
+      JOIN categories c ON l.category_id = c.id
+      WHERE l.user_id = ?
+      ORDER BY l.created_at DESC
+    `, [userId])
+
+    res.json(rows)
+  } catch (err) {
+    console.error(err)
+    res.status(500).json({ message: 'Server error' })
+  }
+}
