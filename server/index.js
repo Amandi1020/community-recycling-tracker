@@ -1,23 +1,27 @@
 import express from 'express'
 import cors from 'cors'
 import dotenv from 'dotenv'
+import { fileURLToPath } from 'url'
+import path from 'path'
 import db from './config/db.js'
 import authRoutes from './routes/authRoutes.js'
 import residentRoutes from './routes/residentRoutes.js'
 
 dotenv.config()
 
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+
 const app = express()
 
 app.use(cors())
 app.use(express.json())
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')))
 
-// Test DB connection
 db.getConnection()
   .then(() => console.log('MySQL connected successfully!'))
   .catch(err => console.error('MySQL connection error:', err))
 
-// Routes
 app.use('/api/auth', authRoutes)
 app.use('/api/resident', residentRoutes)
 
