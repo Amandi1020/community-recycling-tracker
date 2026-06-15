@@ -51,3 +51,51 @@ export const getDashboard = async (req, res) => {
     res.status(500).json({ message: 'Server error' })
   }
 }
+
+export const getCategories = async (req, res) => {
+  try {
+    const [rows] = await db.execute('SELECT * FROM categories')
+    res.json(rows)
+  } catch (err) {
+    console.error(err)
+    res.status(500).json({ message: 'Server error' })
+  }
+}
+
+export const postListing = async (req, res) => {
+  const userId = req.user.id
+  const { item_name, category_id, weight_kg, address, available_time } = req.body
+  const photo_url = req.file ? `/uploads/${req.file.filename}` : null
+
+  try {
+    await db.execute(
+      'INSERT INTO listings (user_id, category_id, item_name, weight_kg, photo_url, address, available_time) VALUES (?, ?, ?, ?, ?, ?, ?)',
+      [userId, category_id, item_name, weight_kg, photo_url, address, available_time]
+    )
+
+    // Check and award First Drop badge
+    const [listingCount] = await db.execute(
+      'SELECT COUNT(*) AS count FROM listings WHERE user_id = ?',
+      [userId]
+    )
+
+    if (listingCount[0].count === 1) {
+      const [badge] = await db.execute(
+        'SELECT id FROM badges WHERE condition_type = ? AND condition_value = ?',
+        ['listings_count', 1]
+      )
+      if (badge.length > 0) {
+        await db.execute(
+          'INSERT IGNORE INTO user_badges (user_id, badge_id) VALUES (?, ?)',
+          [userId, badge[0].id]
+        )
+      }
+    }
+
+    res.status(201).json({ message: 'Item posted successfully!' })
+
+  } catch (err) {
+    console.error(err)
+    res.status(500).json({ message: 'Server error' })
+  }
+}
