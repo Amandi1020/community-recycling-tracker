@@ -1,7 +1,7 @@
 import express from 'express'
 import multer from 'multer'
 import path from 'path'
-import { getDashboard, getCategories, postListing } from '../controllers/residentController.js'
+import { getDashboard, getCategories, postListing, getMyListings, getLeaderboard } from '../controllers/residentController.js'
 import verifyToken from '../middleware/auth.js'
 
 const storage = multer.diskStorage({
@@ -17,5 +17,6 @@ router.get('/dashboard', verifyToken, getDashboard)
 router.get('/categories', verifyToken, getCategories)
 router.post('/post', verifyToken, upload.single('photo'), postListing)
 router.get('/listings', verifyToken, getMyListings)
+router.get('/leaderboard', verifyToken, getLeaderboard)
 
 export default router
