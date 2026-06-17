@@ -16,5 +16,6 @@ const router = express.Router()
 router.get('/dashboard', verifyToken, getDashboard)
 router.get('/categories', verifyToken, getCategories)
 router.post('/post', verifyToken, upload.single('photo'), postListing)
+router.get('/listings', verifyToken, getMyListings)
 
 export default router
