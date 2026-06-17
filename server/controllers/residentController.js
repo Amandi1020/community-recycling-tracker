@@ -118,3 +118,30 @@ export const getMyListings = async (req, res) => {
     res.status(500).json({ message: 'Server error' })
   }
 }
+
+export const getLeaderboard = async (req, res) => {
+  const district = req.user.district
+
+  try {
+    const [rows] = await db.execute(`
+      SELECT 
+        u.id,
+        u.name,
+        u.points,
+        u.level,
+        COALESCE(SUM(l.weight_kg), 0) AS total_kg
+      FROM users u
+      LEFT JOIN listings l ON l.user_id = u.id
+      LEFT JOIN claims cl ON cl.listing_id = l.id AND cl.status = 'collected'
+      WHERE u.district = ? AND u.role = 'resident'
+      GROUP BY u.id
+      ORDER BY u.points DESC
+      LIMIT 20
+    `, [district])
+
+    res.json(rows)
+  } catch (err) {
+    console.error(err)
+    res.status(500).json({ message: 'Server error' })
+  }
+}
