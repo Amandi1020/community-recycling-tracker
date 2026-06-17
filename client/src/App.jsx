@@ -3,6 +3,7 @@ import Register from './pages/auth/Register'
 import Login from './pages/auth/Login'
 import ResidentDashboard from './pages/resident/Dashboard'
 import PostItem from './pages/resident/PostItem'
+import MyListings from './pages/resident/MyListings'
 import PrivateRoute from './components/PrivateRoute'
 
 function App() {
@@ -22,6 +23,11 @@ function App() {
         <Route path="/resident/post" element={
           <PrivateRoute role="resident">
             <PostItem />
+          </PrivateRoute>
+        } />
+        <Route path="/resident/listings" element={
+          <PrivateRoute role="resident">
+            <MyListings />
           </PrivateRoute>
         } />
 
