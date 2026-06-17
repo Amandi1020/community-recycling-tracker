@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import Navbar from '../../components/Navbar'
 import axios from '../../utils/axios'
 
@@ -44,12 +45,12 @@ const MyListings = () => {
 
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-2xl font-bold text-gray-800">My Listings</h1>
-          
-            href="/resident/post"
+          <Link
+            to="/resident/post"
             className="bg-green-600 hover:bg-green-700 text-white text-sm font-semibold px-4 py-2 rounded-lg transition"
-          <a>
+          >
             + Post New Item
-          </a>
+          </Link>
         </div>
 
         {listings.length === 0 ? (
