@@ -5,6 +5,9 @@ import ResidentDashboard from './pages/resident/Dashboard'
 import PostItem from './pages/resident/PostItem'
 import MyListings from './pages/resident/MyListings'
 import Leaderboard from './pages/resident/Leaderboard'
+import CollectorDashboard from './pages/collector/Dashboard'
+import BrowseItems from './pages/collector/BrowseItems'
+import History from './pages/collector/History'
 import PrivateRoute from './components/PrivateRoute'
 
 function App() {
@@ -34,6 +37,23 @@ function App() {
         <Route path="/resident/leaderboard" element={
           <PrivateRoute role="resident">
             <Leaderboard />
+          </PrivateRoute>
+        } />
+
+        {/* Collector Routes */}
+        <Route path="/collector/dashboard" element={
+          <PrivateRoute role="collector">
+            <CollectorDashboard />
+          </PrivateRoute>
+        } />
+        <Route path="/collector/browse" element={
+          <PrivateRoute role="collector">
+            <BrowseItems />
+          </PrivateRoute>
+        } />
+        <Route path="/collector/history" element={
+          <PrivateRoute role="collector">
+            <History />
           </PrivateRoute>
         } />
 
