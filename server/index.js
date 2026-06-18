@@ -6,6 +6,7 @@ import path from 'path'
 import db from './config/db.js'
 import authRoutes from './routes/authRoutes.js'
 import residentRoutes from './routes/residentRoutes.js'
+import collectorRoutes from './routes/collectorRoutes.js'
 
 dotenv.config()
 
@@ -24,6 +25,7 @@ db.getConnection()
 
 app.use('/api/auth', authRoutes)
 app.use('/api/resident', residentRoutes)
+app.use('/api/collector', collectorRoutes)
 
 app.get('/', (req, res) => {
   res.json({ message: 'Recycling Tracker API is running!' })
