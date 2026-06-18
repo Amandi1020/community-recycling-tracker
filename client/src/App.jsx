@@ -8,6 +8,7 @@ import Leaderboard from './pages/resident/Leaderboard'
 import CollectorDashboard from './pages/collector/Dashboard'
 import BrowseItems from './pages/collector/BrowseItems'
 import History from './pages/collector/History'
+import AdminDashboard from './pages/admin/Dashboard'
 import PrivateRoute from './components/PrivateRoute'
 
 function App() {
@@ -54,6 +55,13 @@ function App() {
         <Route path="/collector/history" element={
           <PrivateRoute role="collector">
             <History />
+          </PrivateRoute>
+        } />
+
+        {/* Admin Routes */}
+        <Route path="/admin/dashboard" element={
+          <PrivateRoute role="admin">
+            <AdminDashboard />
           </PrivateRoute>
         } />
 
