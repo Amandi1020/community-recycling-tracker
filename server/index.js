@@ -20,7 +20,6 @@ app.use(cors())
 app.use(express.json())
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')))
 
-
 db.getConnection()
   .then(() => console.log('MySQL connected successfully!'))
   .catch(err => console.error('MySQL connection error:', err))
