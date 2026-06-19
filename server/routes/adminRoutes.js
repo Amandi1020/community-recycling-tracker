@@ -1,10 +1,10 @@
 import express from 'express'
-import { getDashboard } from '../controllers/adminController.js'
+import { getDashboard, getUsers } from '../controllers/adminController.js'
 import verifyToken from '../middleware/auth.js'
-import isAdmin from '../middleware/isAdmin.js'
 
 const router = express.Router()
 
-router.get('/dashboard', verifyToken, isAdmin, getDashboard)
+router.get('/dashboard', verifyToken, getDashboard)
+router.get('/users', verifyToken, getUsers)
 
 export default router
