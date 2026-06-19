@@ -3,26 +3,26 @@ import db from '../config/db.js'
 export const getDashboard = async (req, res) => {
   try {
     const [residents] = await db.execute(
-      "SELECT COUNT(*) AS count FROM users WHERE role = 'resident'"
+      `SELECT COUNT(*) AS count FROM users WHERE role = 'resident'`
     )
     const [collectors] = await db.execute(
-      "SELECT COUNT(*) AS count FROM users WHERE role = 'collector'"
+      `SELECT COUNT(*) AS count FROM users WHERE role = 'collector'`
     )
     const [listings] = await db.execute(
-      'SELECT COUNT(*) AS count FROM listings'
+      `SELECT COUNT(*) AS count FROM listings`
     )
-    const [kg] = await db.execute(`
+    const [totalKg] = await db.execute(`
       SELECT COALESCE(SUM(l.weight_kg), 0) AS total_kg
       FROM listings l
-      JOIN claims cl ON cl.listing_id = l.id AND cl.status = 'collected'
+      JOIN claims cl ON cl.listing_id = l.id
+      WHERE cl.status = 'collected'
     `)
     const [districtStats] = await db.execute(`
       SELECT u.district,
         COUNT(l.id) AS total_listings,
-        COALESCE(SUM(CASE WHEN cl.status = 'collected' THEN l.weight_kg ELSE 0 END), 0) AS total_kg
+        COALESCE(SUM(CASE WHEN l.status = 'collected' THEN l.weight_kg ELSE 0 END), 0) AS total_kg
       FROM users u
       LEFT JOIN listings l ON l.user_id = u.id
-      LEFT JOIN claims cl ON cl.listing_id = l.id
       WHERE u.role = 'resident'
       GROUP BY u.district
       ORDER BY total_kg DESC
@@ -32,9 +32,21 @@ export const getDashboard = async (req, res) => {
       total_residents: residents[0].count,
       total_collectors: collectors[0].count,
       total_listings: listings[0].count,
-      total_kg: kg[0].total_kg,
+      total_kg: totalKg[0].total_kg,
       districtStats
     })
+  } catch (err) {
+    console.error(err)
+    res.status(500).json({ message: 'Server error' })
+  }
+}
+
+export const getUsers = async (req, res) => {
+  try {
+    const [rows] = await db.execute(
+      'SELECT id, name, email, role, district, points, level, created_at FROM users ORDER BY created_at DESC'
+    )
+    res.json(rows)
   } catch (err) {
     console.error(err)
     res.status(500).json({ message: 'Server error' })
