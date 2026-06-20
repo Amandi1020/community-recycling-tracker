@@ -3,10 +3,10 @@ import { Link } from 'react-router-dom'
 import Navbar from '../../components/Navbar'
 import axios from '../../utils/axios'
 
-const statusColors = {
-  available: 'bg-green-100 text-green-700',
-  claimed: 'bg-yellow-100 text-yellow-700',
-  collected: 'bg-blue-100 text-blue-700'
+const statusStyles = {
+  available: 'bg-sage text-moss',
+  claimed: 'bg-clay/15 text-clay',
+  collected: 'bg-charcoal/8 text-charcoal/60'
 }
 
 const MyListings = () => {
@@ -29,63 +29,67 @@ const MyListings = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-green-50">
+      <div className="min-h-screen bg-cream">
         <Navbar />
         <div className="flex items-center justify-center h-96">
-          <p className="text-green-700 text-lg font-medium animate-pulse">Loading listings...</p>
+          <p className="text-moss text-sm font-medium animate-pulse">Loading listings...</p>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-green-50">
+    <div className="min-h-screen bg-cream">
       <Navbar />
-      <div className="max-w-5xl mx-auto px-4 py-8">
+      <div className="max-w-5xl mx-auto px-6 py-10">
 
-        <div className="flex items-center justify-between mb-6">
-          <h1 className="text-2xl font-bold text-gray-800">My Listings</h1>
+        <div className="flex items-center justify-between mb-6 flex-wrap gap-4">
+          <div>
+            <h1 className="font-display text-3xl font-medium text-charcoal mb-1">My listings</h1>
+            <p className="text-charcoal/55 text-sm">Everything you've posted so far</p>
+          </div>
           <Link
             to="/resident/post"
-            className="bg-green-600 hover:bg-green-700 text-white text-sm font-semibold px-4 py-2 rounded-lg transition"
+            className="bg-forest hover:bg-forest/90 text-sage text-sm font-semibold px-4 py-2.5 rounded-xl transition"
           >
-            + Post New Item
+            + Post new item
           </Link>
         </div>
 
         {listings.length === 0 ? (
-          <div className="bg-white rounded-2xl shadow-sm p-12 text-center">
+          <div className="bg-white rounded-2xl border border-charcoal/8 p-16 text-center">
             <p className="text-4xl mb-4">♻️</p>
-            <p className="text-gray-500">No listings yet. Post your first recyclable item!</p>
+            <p className="text-charcoal/50 text-sm">No listings yet — post your first recyclable item.</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {listings.map(listing => (
-              <div key={listing.id} className="bg-white rounded-2xl shadow-sm p-6">
-
-                <div className="flex items-start justify-between mb-3">
-                  <h2 className="text-lg font-semibold text-gray-800">{listing.item_name}</h2>
-                  <span className={`text-xs font-medium px-3 py-1 rounded-full ${statusColors[listing.status]}`}>
-                    {listing.status}
-                  </span>
-                </div>
+              <div key={listing.id} className="bg-white rounded-2xl border border-charcoal/8 overflow-hidden">
 
                 {listing.photo_url && (
                   <img
                     src={`http://localhost:5000${listing.photo_url}`}
                     alt={listing.item_name}
-                    className="w-full h-40 object-cover rounded-lg mb-3"
+                    className="w-full h-40 object-cover"
                   />
                 )}
 
-                <div className="space-y-1 text-sm text-gray-500">
-                  <p>📦 Category: <span className="text-gray-700 font-medium">{listing.category_name}</span></p>
-                  <p>⚖️ Weight: <span className="text-gray-700 font-medium">{listing.weight_kg} kg</span></p>
-                  <p>📍 Address: <span className="text-gray-700 font-medium">{listing.address}</span></p>
-                  <p>🕐 Available: <span className="text-gray-700 font-medium">{listing.available_time}</span></p>
-                  <p>📅 Posted: <span className="text-gray-700 font-medium">{new Date(listing.created_at).toLocaleDateString()}</span></p>
-                </div>
+                <div className="p-6">
+                  <div className="flex items-start justify-between mb-3">
+                    <h2 className="font-display text-lg font-medium text-charcoal">{listing.item_name}</h2>
+                    <span className={`text-xs font-medium px-3 py-1 rounded-full capitalize ${statusStyles[listing.status]}`}>
+                      {listing.status}
+                    </span>
+                  </div>
 
+                  <div className="space-y-1.5 text-sm text-charcoal/55">
+                    <p>Category — <span className="text-charcoal font-medium">{listing.category_name}</span></p>
+                    <p>Weight — <span className="text-charcoal font-medium">{listing.weight_kg} kg</span></p>
+                    <p>Address — <span className="text-charcoal font-medium">{listing.address}</span></p>
+                    <p>Available — <span className="text-charcoal font-medium">{listing.available_time}</span></p>
+                    <p className="text-charcoal/35 text-xs pt-1">Posted {new Date(listing.created_at).toLocaleDateString()}</p>
+                  </div>
+                </div>
               </div>
             ))}
           </div>
