@@ -43,14 +43,14 @@ const MyListings = () => {
       <Navbar />
       <div className="max-w-5xl mx-auto px-6 py-10">
 
-        <div className="flex items-center justify-between mb-6 flex-wrap gap-4">
+        <div className="bg-forest rounded-2xl p-7 mb-6 flex items-center justify-between flex-wrap gap-4">
           <div>
-            <h1 className="font-display text-3xl font-medium text-charcoal mb-1">My listings</h1>
-            <p className="text-charcoal/55 text-sm">Everything you've posted so far</p>
+            <h1 className="font-display text-2xl font-medium text-sage mb-1">My listings</h1>
+            <p className="text-sage/65 text-sm">Everything you've posted so far</p>
           </div>
           <Link
             to="/resident/post"
-            className="bg-forest hover:bg-forest/90 text-sage text-sm font-semibold px-4 py-2.5 rounded-xl transition"
+            className="bg-sage hover:bg-sage/90 text-forest text-sm font-semibold px-4 py-2.5 rounded-xl transition"
           >
             + Post new item
           </Link>
