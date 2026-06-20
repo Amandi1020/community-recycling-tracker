@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Navbar from '../../components/Navbar'
 import axios from '../../utils/axios'
+import postItemImg from '../../assets/illustrations/post-item.jpeg'
 import plasticIcon from '../../assets/icons/plastic.png'
 import paperIcon from '../../assets/icons/paper.png'
 import ewasteIcon from '../../assets/icons/electronic-waste.png'
@@ -71,11 +72,22 @@ const PostItem = () => {
   return (
     <div className="min-h-screen bg-cream">
       <Navbar />
+
       <div className="max-w-2xl mx-auto px-6 py-10">
 
-        <div className="mb-6">
-          <h1 className="font-display text-3xl font-medium text-charcoal mb-1">Post a recyclable item</h1>
-          <p className="text-charcoal/55 text-sm">Tell your district what you're giving away</p>
+        {/* Hero banner — image on the side, no blur */}
+        <div className="bg-forest rounded-2xl overflow-hidden mb-6 flex items-stretch">
+          <div className="p-7 flex-1 flex flex-col justify-center">
+            <h1 className="font-display text-2xl font-medium text-sage mb-2">Post a recyclable item</h1>
+            <p className="text-sage/65 text-sm leading-relaxed">
+              Tell your district what you're giving away — a collector nearby will claim it.
+            </p>
+          </div>
+          <img
+            src={postItemImg}
+            alt="Hands holding recyclable items"
+            className="w-40 object-cover hidden sm:block"
+          />
         </div>
 
         <div className="bg-white rounded-2xl border border-charcoal/8 p-8">
@@ -101,57 +113,41 @@ const PostItem = () => {
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-charcoal/80 mb-2">Category</label>
-                <div className="grid grid-cols-5 gap-2 mb-2">
-                  {categories.map(cat => (
-                    <button
-                      type="button"
-                      key={cat.id}
-                      onClick={() => setFormData({ ...formData, category_id: String(cat.id) })}
-                      className={`flex flex-col items-center gap-1.5 p-2.5 rounded-xl border transition
-                        ${String(formData.category_id) === String(cat.id)
-                          ? 'border-moss bg-sage'
-                          : 'border-charcoal/10 bg-white hover:border-moss/40'}`}
-                    >
-                      {categoryIcons[cat.name] && (
-                        <img src={categoryIcons[cat.name]} alt={cat.name} className="w-7 h-7 object-contain" />
-                      )}
-                      <span className="text-[11px] font-medium text-charcoal/70 text-center leading-tight">{cat.name}</span>
-                    </button>
-                  ))}
-                </div>
-                <select
-                  name="category_id"
-                  value={formData.category_id}
-                  onChange={handleChange}
-                  required
-                  className="w-full border border-charcoal/15 rounded-xl px-4 py-2.5 text-charcoal bg-white text-sm focus:outline-none focus:ring-2 focus:ring-moss/40 focus:border-moss transition"
-                >
-                  <option value="">Or select from list</option>
-                  {categories.map(cat => (
-                    <option key={cat.id} value={cat.id}>
-                      {cat.name} — {cat.points_per_kg} pts/kg
-                    </option>
-                  ))}
-                </select>
+            <div>
+              <label className="block text-sm font-medium text-charcoal/80 mb-2">Category</label>
+              <div className="grid grid-cols-5 gap-2 mb-2">
+                {categories.map(cat => (
+                  <button
+                    type="button"
+                    key={cat.id}
+                    onClick={() => setFormData({ ...formData, category_id: String(cat.id) })}
+                    className={`flex flex-col items-center gap-1.5 p-2.5 rounded-xl border transition
+                      ${String(formData.category_id) === String(cat.id)
+                        ? 'border-moss bg-sage'
+                        : 'border-charcoal/10 bg-white hover:border-moss/40'}`}
+                  >
+                    {categoryIcons[cat.name] && (
+                      <img src={categoryIcons[cat.name]} alt={cat.name} className="w-7 h-7 object-contain" />
+                    )}
+                    <span className="text-[11px] font-medium text-charcoal/70 text-center leading-tight">{cat.name}</span>
+                  </button>
+                ))}
               </div>
+            </div>
 
-              <div>
-                <label className="block text-sm font-medium text-charcoal/80 mb-1.5">Weight (kg)</label>
-                <input
-                  type="number"
-                  name="weight_kg"
-                  value={formData.weight_kg}
-                  onChange={handleChange}
-                  required
-                  min="0.1"
-                  step="0.1"
-                  className="w-full border border-charcoal/15 rounded-xl px-4 py-2.5 text-charcoal bg-white focus:outline-none focus:ring-2 focus:ring-moss/40 focus:border-moss transition"
-                  placeholder="2.5"
-                />
-              </div>
+            <div>
+              <label className="block text-sm font-medium text-charcoal/80 mb-1.5">Weight (kg)</label>
+              <input
+                type="number"
+                name="weight_kg"
+                value={formData.weight_kg}
+                onChange={handleChange}
+                required
+                min="0.1"
+                step="0.1"
+                className="w-full border border-charcoal/15 rounded-xl px-4 py-2.5 text-charcoal bg-white focus:outline-none focus:ring-2 focus:ring-moss/40 focus:border-moss transition"
+                placeholder="2.5"
+              />
             </div>
 
             <div>
@@ -200,6 +196,7 @@ const PostItem = () => {
 
           </form>
         </div>
+
       </div>
     </div>
   )
