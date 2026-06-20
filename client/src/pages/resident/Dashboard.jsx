@@ -3,12 +3,15 @@ import Navbar from '../../components/Navbar'
 import { useAuth } from '../../context/AuthContext'
 import axios from '../../utils/axios'
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts'
+import seedlingIcon from '../../assets/icons/seeding.png'
+import treeIcon from '../../assets/icons/tree.png'
+import trophyIcon from '../../assets/icons/trophy.png'
 
 const levelInfo = {
-  'Seedling': { emoji: '🌱', color: 'bg-sage text-moss' },
-  'Sprout': { emoji: '🌿', color: 'bg-sage text-moss' },
-  'Guardian': { emoji: '🌳', color: 'bg-sage text-forest' },
-  'Eco Hero': { emoji: '🏆', color: 'bg-clay/15 text-clay' }
+  'Seedling': { icon: seedlingIcon, color: 'bg-sage text-moss' },
+  'Sprout': { icon: seedlingIcon, color: 'bg-sage text-moss' },
+  'Guardian': { icon: treeIcon, color: 'bg-sage text-forest' },
+  'Eco Hero': { icon: trophyIcon, color: 'bg-clay/15 text-clay' }
 }
 
 const Dashboard = () => {
@@ -63,7 +66,7 @@ const Dashboard = () => {
               <h1 className="font-display text-3xl font-medium text-sage">{user?.name}</h1>
             </div>
             <div className={`flex items-center gap-2 px-4 py-2 rounded-full ${level.color}`}>
-              <span className="text-xl">{level.emoji}</span>
+              <img src={level.icon} alt={user?.level} className="w-5 h-5 object-contain" />
               <span className="font-medium text-sm">{user?.level || 'Seedling'}</span>
             </div>
           </div>
