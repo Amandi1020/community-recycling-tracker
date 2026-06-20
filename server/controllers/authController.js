@@ -45,15 +45,18 @@ export const login = async (req, res) => {
       [email]
     )
 
+    
+
     if (users.length === 0) {
       return res.status(400).json({ message: 'Invalid email or password' })
     }
 
     const user = users[0]
+    
 
     // Check password
     const isMatch = await bcrypt.compare(password, user.password_hash)
-
+    
     if (!isMatch) {
       return res.status(400).json({ message: 'Invalid email or password' })
     }
@@ -83,3 +86,5 @@ export const login = async (req, res) => {
     res.status(500).json({ message: 'Server error' })
   }
 }
+
+    
