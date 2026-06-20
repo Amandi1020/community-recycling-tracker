@@ -25,25 +25,26 @@ const Users = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-green-50">
+      <div className="min-h-screen bg-cream">
         <Navbar />
         <div className="flex items-center justify-center h-96">
-          <p className="text-green-700 text-lg font-medium animate-pulse">Loading users...</p>
+          <p className="text-moss text-sm font-medium animate-pulse">Loading users...</p>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-green-50">
+    <div className="min-h-screen bg-cream">
       <Navbar />
-      <div className="max-w-5xl mx-auto px-4 py-8">
+      <div className="max-w-5xl mx-auto px-6 py-10">
 
-        <div className="mb-6">
-          <h1 className="text-2xl font-bold text-gray-800">Manage Users 👥</h1>
-          <p className="text-gray-500 mt-1">All registered users in the system</p>
+        <div className="bg-forest rounded-2xl p-8 mb-6">
+          <h1 className="font-display text-3xl font-medium text-sage mb-1">Manage users</h1>
+          <p className="text-sage/65 text-sm">All registered users in the system</p>
         </div>
 
+        {/* Filter tabs */}
         <div className="flex gap-2 mb-6">
           {['all', 'resident', 'collector', 'admin'].map(role => (
             <button
@@ -51,17 +52,17 @@ const Users = () => {
               onClick={() => setFilter(role)}
               className={`px-4 py-1.5 rounded-full text-sm font-medium capitalize transition
                 ${filter === role
-                  ? 'bg-green-600 text-white'
-                  : 'bg-white text-gray-600 border border-gray-200 hover:border-green-400'}`}
+                  ? 'bg-forest text-sage'
+                  : 'bg-white text-charcoal/60 border border-charcoal/10 hover:border-moss/40'}`}
             >
               {role}
             </button>
           ))}
         </div>
 
-        <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
+        <div className="bg-white rounded-2xl border border-charcoal/8 overflow-hidden">
           <table className="w-full text-sm">
-            <thead className="bg-green-50 text-gray-600">
+            <thead className="bg-sage text-charcoal/70">
               <tr>
                 <th className="text-left px-6 py-3 font-medium">Name</th>
                 <th className="text-left px-6 py-3 font-medium">Email</th>
@@ -73,20 +74,20 @@ const Users = () => {
             </thead>
             <tbody>
               {filtered.map(user => (
-                <tr key={user.id} className="border-t border-gray-100">
-                  <td className="px-6 py-3 font-medium text-gray-800">{user.name}</td>
-                  <td className="px-6 py-3 text-gray-500">{user.email}</td>
+                <tr key={user.id} className="border-t border-charcoal/8">
+                  <td className="px-6 py-3 font-medium text-charcoal">{user.name}</td>
+                  <td className="px-6 py-3 text-charcoal/55">{user.email}</td>
                   <td className="px-6 py-3">
-                    <span className={`text-xs font-medium px-3 py-1 rounded-full
-                      ${user.role === 'admin' ? 'bg-purple-100 text-purple-700' :
-                        user.role === 'collector' ? 'bg-blue-100 text-blue-700' :
-                        'bg-green-100 text-green-700'}`}>
+                    <span className={`text-xs font-medium px-3 py-1 rounded-full capitalize
+                      ${user.role === 'admin' ? 'bg-clay/15 text-clay' :
+                        user.role === 'collector' ? 'bg-moss/15 text-moss' :
+                        'bg-sage text-moss'}`}>
                       {user.role}
                     </span>
                   </td>
-                  <td className="px-6 py-3 text-gray-500">{user.district}</td>
-                  <td className="px-6 py-3 text-gray-700 font-medium">{user.points}</td>
-                  <td className="px-6 py-3 text-gray-500">{new Date(user.created_at).toLocaleDateString()}</td>
+                  <td className="px-6 py-3 text-charcoal/55">{user.district}</td>
+                  <td className="px-6 py-3 text-charcoal font-medium">{user.points}</td>
+                  <td className="px-6 py-3 text-charcoal/45">{new Date(user.created_at).toLocaleDateString()}</td>
                 </tr>
               ))}
             </tbody>
