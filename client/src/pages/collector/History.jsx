@@ -35,64 +35,64 @@ const History = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-green-50">
+      <div className="min-h-screen bg-cream">
         <Navbar />
         <div className="flex items-center justify-center h-96">
-          <p className="text-green-700 text-lg font-medium animate-pulse">Loading history...</p>
+          <p className="text-moss text-sm font-medium animate-pulse">Loading history...</p>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-green-50">
+    <div className="min-h-screen bg-cream">
       <Navbar />
-      <div className="max-w-5xl mx-auto px-4 py-8">
+      <div className="max-w-5xl mx-auto px-6 py-10">
 
-        <div className="mb-6">
-          <h1 className="text-2xl font-bold text-gray-800">Collection History 📋</h1>
-          <p className="text-gray-500 mt-1">All your claimed and collected items</p>
+        <div className="bg-forest rounded-2xl p-8 mb-6">
+          <h1 className="font-display text-3xl font-medium text-sage mb-1">Collection history</h1>
+          <p className="text-sage/65 text-sm">All your claimed and collected items</p>
         </div>
 
         {history.length === 0 ? (
-          <div className="bg-white rounded-2xl shadow-sm p-12 text-center">
+          <div className="bg-white rounded-2xl border border-charcoal/8 p-16 text-center">
             <p className="text-4xl mb-4">🚛</p>
-            <p className="text-gray-500">No collections yet. Browse items to get started!</p>
+            <p className="text-charcoal/50 text-sm">No collections yet — browse items to get started.</p>
           </div>
         ) : (
           <div className="space-y-4">
             {history.map(item => (
-              <div key={item.claim_id} className="bg-white rounded-2xl shadow-sm p-6">
+              <div key={item.claim_id} className="bg-white rounded-2xl border border-charcoal/8 p-6">
                 <div className="flex items-start justify-between mb-3">
                   <div>
-                    <h2 className="text-lg font-semibold text-gray-800">{item.item_name}</h2>
-                    <p className="text-sm text-gray-500">👤 Resident: {item.resident_name}</p>
+                    <h2 className="font-display text-lg font-medium text-charcoal">{item.item_name}</h2>
+                    <p className="text-sm text-charcoal/50">Resident: {item.resident_name}</p>
                   </div>
                   <span className={`text-xs font-medium px-3 py-1 rounded-full
                     ${item.status === 'collected'
-                      ? 'bg-blue-100 text-blue-700'
-                      : 'bg-yellow-100 text-yellow-700'}`}>
+                      ? 'bg-moss/15 text-moss'
+                      : 'bg-clay/15 text-clay'}`}>
                     {item.status}
                   </span>
                 </div>
 
-                <div className="space-y-1 text-sm text-gray-500 mb-4">
-                  <p>📦 Category: <span className="text-gray-700 font-medium">{item.category_name}</span></p>
-                  <p>⚖️ Weight: <span className="text-gray-700 font-medium">{item.weight_kg} kg</span></p>
-                  <p>📍 Address: <span className="text-gray-700 font-medium">{item.address}</span></p>
-                  <p>🕐 Available: <span className="text-gray-700 font-medium">{item.available_time}</span></p>
-                  <p>📅 Claimed: <span className="text-gray-700 font-medium">{new Date(item.claimed_at).toLocaleDateString()}</span></p>
-                  {item.collected_at && (
-                    <p>✅ Collected: <span className="text-gray-700 font-medium">{new Date(item.collected_at).toLocaleDateString()}</span></p>
-                  )}
+                <div className="space-y-1.5 text-sm text-charcoal/55 mb-4">
+                  <p>Category — <span className="text-charcoal font-medium">{item.category_name}</span></p>
+                  <p>Weight — <span className="text-charcoal font-medium">{item.weight_kg} kg</span></p>
+                  <p>Address — <span className="text-charcoal font-medium">{item.address}</span></p>
+                  <p>Available — <span className="text-charcoal font-medium">{item.available_time}</span></p>
+                  <p className="text-charcoal/35 text-xs pt-1">
+                    Claimed {new Date(item.claimed_at).toLocaleDateString()}
+                    {item.collected_at && ` · Collected ${new Date(item.collected_at).toLocaleDateString()}`}
+                  </p>
                 </div>
 
                 {item.status === 'claimed' && (
                   <button
                     onClick={() => handleMarkCollected(item.claim_id)}
-                    className="w-full bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold py-2 rounded-lg transition"
+                    className="w-full bg-forest hover:bg-forest/90 text-sage text-sm font-semibold py-2.5 rounded-xl transition"
                   >
-                    Mark as Collected ✅
+                    Mark as collected
                   </button>
                 )}
 
