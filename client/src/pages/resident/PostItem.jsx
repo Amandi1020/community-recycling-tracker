@@ -2,6 +2,19 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Navbar from '../../components/Navbar'
 import axios from '../../utils/axios'
+import plasticIcon from '../../assets/icons/plastic.png'
+import paperIcon from '../../assets/icons/paper.png'
+import ewasteIcon from '../../assets/icons/electronic-waste.png'
+import glassIcon from '../../assets/icons/glass.png'
+import metalIcon from '../../assets/icons/metal.png'
+
+const categoryIcons = {
+  'Plastic': plasticIcon,
+  'Paper': paperIcon,
+  'E-Waste': ewasteIcon,
+  'Glass': glassIcon,
+  'Metal': metalIcon
+}
 
 const PostItem = () => {
   const navigate = useNavigate()
@@ -90,15 +103,33 @@ const PostItem = () => {
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-charcoal/80 mb-1.5">Category</label>
+                <label className="block text-sm font-medium text-charcoal/80 mb-2">Category</label>
+                <div className="grid grid-cols-5 gap-2 mb-2">
+                  {categories.map(cat => (
+                    <button
+                      type="button"
+                      key={cat.id}
+                      onClick={() => setFormData({ ...formData, category_id: String(cat.id) })}
+                      className={`flex flex-col items-center gap-1.5 p-2.5 rounded-xl border transition
+                        ${String(formData.category_id) === String(cat.id)
+                          ? 'border-moss bg-sage'
+                          : 'border-charcoal/10 bg-white hover:border-moss/40'}`}
+                    >
+                      {categoryIcons[cat.name] && (
+                        <img src={categoryIcons[cat.name]} alt={cat.name} className="w-7 h-7 object-contain" />
+                      )}
+                      <span className="text-[11px] font-medium text-charcoal/70 text-center leading-tight">{cat.name}</span>
+                    </button>
+                  ))}
+                </div>
                 <select
                   name="category_id"
                   value={formData.category_id}
                   onChange={handleChange}
                   required
-                  className="w-full border border-charcoal/15 rounded-xl px-4 py-2.5 text-charcoal bg-white focus:outline-none focus:ring-2 focus:ring-moss/40 focus:border-moss transition"
+                  className="w-full border border-charcoal/15 rounded-xl px-4 py-2.5 text-charcoal bg-white text-sm focus:outline-none focus:ring-2 focus:ring-moss/40 focus:border-moss transition"
                 >
-                  <option value="">Select category</option>
+                  <option value="">Or select from list</option>
                   {categories.map(cat => (
                     <option key={cat.id} value={cat.id}>
                       {cat.name} — {cat.points_per_kg} pts/kg
