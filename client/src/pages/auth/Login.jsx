@@ -42,108 +42,93 @@ const Login = () => {
   }
 
   return (
-    <div className="min-h-screen bg-cream flex">
-{/* Left panel — brand */}
-      <div className="hidden lg:flex lg:w-1/2 bg-forest relative overflow-hidden flex-col justify-between p-12">
+    <div className="min-h-screen bg-cream flex items-center justify-center p-4 sm:p-8">
+      <div className="w-full max-w-5xl bg-white rounded-[2.5rem] overflow-hidden shadow-xl flex flex-col lg:flex-row min-h-[600px]">
 
-        <div className="relative z-10">
-          <div className="flex items-center gap-2">
-            <span className="text-3xl">♻️</span>
-            <span className="font-display text-2xl font-semibold text-sage">EcoTrack</span>
-          </div>
-        </div>
+        {/* Left — illustration fills entire half */}
+        <div className="lg:w-1/2 relative overflow-hidden">
 
-        <div className="relative z-10 flex flex-col items-center">
+          {/* Illustration — fills the whole panel */}
           <img
             src={heroLogin}
             alt="Person recycling illustration"
-            className="w-72 h-72 object-contain rounded-2xl mb-6"
+            className="w-full h-full object-cover absolute inset-0"
           />
-          <h1 className="font-display text-3xl font-medium text-sage leading-tight mb-3 text-center">
-            Recycling, reimagined for your community.
-          </h1>
-          <p className="text-sage/70 text-sm max-w-sm text-center">
-            Post what you no longer need. Earn points for what you give away.
-          </p>
-        </div>
 
-        <div className="relative z-10 flex gap-8 text-sage/80 text-sm justify-center">
-          <div>
-            <p className="font-display text-2xl text-sage">5</p>
-            <p>Categories</p>
-          </div>
-          <div>
-            <p className="font-display text-2xl text-sage">25</p>
-            <p>Districts</p>
-          </div>
-          <div>
-            <p className="font-display text-2xl text-sage">4</p>
-            <p>Levels</p>
+          {/* Brand mark */}
+          <div className="absolute top-8 left-8 flex items-center gap-2.5 z-10">
+            <span className="text-3xl">♻️</span>
+            <span className="font-display text-2xl font-semibold text-white drop-shadow-md">EcoTrack</span>
           </div>
         </div>
-      </div>
 
-      {/* Right panel — form */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-12">
-        <div className="w-full max-w-sm">
+        {/* Right — dark green form panel */}
+        <div className="lg:w-1/2 bg-forest flex items-center justify-center p-10 sm:p-14">
+          <div className="w-full max-w-sm">
 
-          <div className="lg:hidden flex items-center gap-2 mb-10">
-            <span className="text-2xl">♻️</span>
-            <span className="font-display text-xl font-semibold text-forest">EcoTrack</span>
+            <h2 className="font-display text-4xl font-medium text-sage mb-8 tracking-wide">Login</h2>
+
+            {error && (
+              <div className="bg-clay/15 text-clay border border-clay/30 px-4 py-3 rounded-full mb-5 text-sm text-center">
+                {error}
+              </div>
+            )}
+
+            <form onSubmit={handleSubmit} className="space-y-5">
+              <div>
+                <label className="block text-sm font-medium text-sage/70 mb-2">Email</label>
+                <div className="relative">
+                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-sage/50">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>
+                  </span>
+                  <input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    required
+                    className="w-full bg-moss/30 border border-sage/20 rounded-full pl-11 pr-4 py-3 text-sage placeholder-sage/40 focus:outline-none focus:ring-2 focus:ring-sage/40 focus:border-sage/40 transition"
+                    placeholder="you@example.com"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-sage/70 mb-2">Password</label>
+                <div className="relative">
+                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-sage/50">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+                  </span>
+                  <input
+                    type="password"
+                    name="password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    required
+                    className="w-full bg-moss/30 border border-sage/20 rounded-full pl-11 pr-4 py-3 text-sage placeholder-sage/40 focus:outline-none focus:ring-2 focus:ring-sage/40 focus:border-sage/40 transition"
+                    placeholder="Enter your password"
+                  />
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full bg-sage hover:bg-sage/90 text-forest font-semibold py-3 rounded-full transition duration-200 mt-2"
+              >
+                {loading ? 'Logging in...' : 'Login'}
+              </button>
+            </form>
+
+            <p className="text-center text-sm text-sage/60 mt-8">
+              Don't have an account?{' '}
+              <Link to="/register" className="text-sage font-medium hover:underline">
+                Create one
+              </Link>
+            </p>
           </div>
-
-          <h2 className="font-display text-3xl font-medium text-charcoal mb-2">Welcome back</h2>
-          <p className="text-charcoal/60 text-sm mb-8">Log in to track your recycling impact</p>
-
-          {error && (
-            <div className="bg-clay/10 text-clay border border-clay/20 px-4 py-3 rounded-xl mb-5 text-sm">
-              {error}
-            </div>
-          )}
-
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-charcoal/80 mb-1.5">Email</label>
-              <input
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                required
-                className="w-full border border-charcoal/15 rounded-xl px-4 py-2.5 text-charcoal bg-white focus:outline-none focus:ring-2 focus:ring-moss/40 focus:border-moss transition"
-                placeholder="you@example.com"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-charcoal/80 mb-1.5">Password</label>
-              <input
-                type="password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                required
-                className="w-full border border-charcoal/15 rounded-xl px-4 py-2.5 text-charcoal bg-white focus:outline-none focus:ring-2 focus:ring-moss/40 focus:border-moss transition"
-                placeholder="Enter your password"
-              />
-            </div>
-
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full bg-forest hover:bg-forest/90 text-sage font-semibold py-2.5 rounded-xl transition duration-200 mt-2"
-            >
-              {loading ? 'Logging in...' : 'Log in'}
-            </button>
-          </form>
-
-          <p className="text-center text-sm text-charcoal/60 mt-8">
-            Don't have an account?{' '}
-            <Link to="/register" className="text-moss font-medium hover:underline">
-              Create one
-            </Link>
-          </p>
         </div>
+
       </div>
     </div>
   )
