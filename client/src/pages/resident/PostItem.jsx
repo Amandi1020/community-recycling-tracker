@@ -51,16 +51,13 @@ const PostItem = () => {
     e.preventDefault()
     setLoading(true)
     setError('')
-
     try {
       const data = new FormData()
       Object.keys(formData).forEach(key => data.append(key, formData[key]))
       if (photo) data.append('photo', photo)
-
       await axios.post('/resident/post', data, {
         headers: { 'Content-Type': 'multipart/form-data' }
       })
-
       navigate('/resident/listings')
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to post item')
@@ -70,36 +67,37 @@ const PostItem = () => {
   }
 
   return (
-    <div className="min-h-screen bg-cream">
+    <div className="min-h-screen bg-gradient-to-b from-sage to-cream">
       <Navbar />
+      <div className="max-w-2xl mx-auto px-6 py-8">
 
-      <div className="max-w-2xl mx-auto px-6 py-10">
-
-        {/* Hero banner — image on the side, no blur */}
-        <div className="bg-forest rounded-2xl overflow-hidden mb-6 flex items-stretch">
+        {/* Banner */}
+        <div className="bg-forest rounded-2xl overflow-hidden mb-5 flex items-stretch">
           <div className="p-7 flex-1 flex flex-col justify-center">
-            <h1 className="font-display text-2xl font-medium text-sage mb-2">Post a recyclable item</h1>
+            <h1 className="font-display text-2xl font-medium text-sage mb-1">Post a recyclable item</h1>
             <p className="text-sage/65 text-sm leading-relaxed">
-              Tell your district what you're giving away — a collector nearby will claim it.
+              Tell your district what you're giving away — a collector nearby will claim it and you'll earn points.
             </p>
           </div>
-          <img
-            src={postItemImg}
-            alt="Hands holding recyclable items"
-            className="w-40 object-cover hidden sm:block"
-          />
+          <div className="w-40 bg-white flex items-center justify-center p-3 hidden sm:flex">
+            <img
+              src={postItemImg}
+              alt="Recycling illustration"
+              className="w-full h-full object-contain"
+            />
+          </div>
         </div>
 
-        <div className="bg-white rounded-2xl border border-charcoal/8 p-8">
+        {/* Form */}
+        <div className="bg-moss/20 rounded-2xl border border-moss/25 p-6">
 
           {error && (
-            <div className="bg-clay/10 text-clay border border-clay/20 px-4 py-3 rounded-xl mb-5 text-sm">
+            <div className="bg-clay/10 text-clay border border-clay/20 px-4 py-3 rounded-xl mb-4 text-sm">
               {error}
             </div>
           )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
-
             <div>
               <label className="block text-sm font-medium text-charcoal/80 mb-1.5">Item name</label>
               <input
@@ -108,14 +106,14 @@ const PostItem = () => {
                 value={formData.item_name}
                 onChange={handleChange}
                 required
-                className="w-full border border-charcoal/15 rounded-xl px-4 py-2.5 text-charcoal bg-white focus:outline-none focus:ring-2 focus:ring-moss/40 focus:border-moss transition"
+                className="w-full border border-moss/25 rounded-xl px-4 py-2.5 text-charcoal bg-white/60 focus:outline-none focus:ring-2 focus:ring-moss/40 focus:border-moss focus:bg-white transition"
                 placeholder="e.g. Plastic bottles, Old laptop"
               />
             </div>
 
             <div>
               <label className="block text-sm font-medium text-charcoal/80 mb-2">Category</label>
-              <div className="grid grid-cols-5 gap-2 mb-2">
+              <div className="grid grid-cols-5 gap-2">
                 {categories.map(cat => (
                   <button
                     type="button"
@@ -123,13 +121,13 @@ const PostItem = () => {
                     onClick={() => setFormData({ ...formData, category_id: String(cat.id) })}
                     className={`flex flex-col items-center gap-1.5 p-2.5 rounded-xl border transition
                       ${String(formData.category_id) === String(cat.id)
-                        ? 'border-moss bg-sage'
-                        : 'border-charcoal/10 bg-white hover:border-moss/40'}`}
+                        ? 'border-moss bg-moss text-white'
+                        : 'border-moss/20 bg-white/50 hover:border-moss/50'}`}
                   >
                     {categoryIcons[cat.name] && (
                       <img src={categoryIcons[cat.name]} alt={cat.name} className="w-7 h-7 object-contain" />
                     )}
-                    <span className="text-[11px] font-medium text-charcoal/70 text-center leading-tight">{cat.name}</span>
+                    <span className="text-[11px] font-medium text-center leading-tight">{cat.name}</span>
                   </button>
                 ))}
               </div>
@@ -145,7 +143,7 @@ const PostItem = () => {
                 required
                 min="0.1"
                 step="0.1"
-                className="w-full border border-charcoal/15 rounded-xl px-4 py-2.5 text-charcoal bg-white focus:outline-none focus:ring-2 focus:ring-moss/40 focus:border-moss transition"
+                className="w-full border border-moss/25 rounded-xl px-4 py-2.5 text-charcoal bg-white/60 focus:outline-none focus:ring-2 focus:ring-moss/40 focus:border-moss focus:bg-white transition"
                 placeholder="2.5"
               />
             </div>
@@ -158,7 +156,7 @@ const PostItem = () => {
                 value={formData.address}
                 onChange={handleChange}
                 required
-                className="w-full border border-charcoal/15 rounded-xl px-4 py-2.5 text-charcoal bg-white focus:outline-none focus:ring-2 focus:ring-moss/40 focus:border-moss transition"
+                className="w-full border border-moss/25 rounded-xl px-4 py-2.5 text-charcoal bg-white/60 focus:outline-none focus:ring-2 focus:ring-moss/40 focus:border-moss focus:bg-white transition"
                 placeholder="Enter your pickup address"
               />
             </div>
@@ -171,7 +169,7 @@ const PostItem = () => {
                 value={formData.available_time}
                 onChange={handleChange}
                 required
-                className="w-full border border-charcoal/15 rounded-xl px-4 py-2.5 text-charcoal bg-white focus:outline-none focus:ring-2 focus:ring-moss/40 focus:border-moss transition"
+                className="w-full border border-moss/25 rounded-xl px-4 py-2.5 text-charcoal bg-white/60 focus:outline-none focus:ring-2 focus:ring-moss/40 focus:border-moss focus:bg-white transition"
                 placeholder="e.g. Weekdays 9am – 5pm"
               />
             </div>
@@ -182,18 +180,17 @@ const PostItem = () => {
                 type="file"
                 accept="image/*"
                 onChange={(e) => setPhoto(e.target.files[0])}
-                className="w-full border border-charcoal/15 rounded-xl px-4 py-2.5 text-charcoal/70 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-moss/40 focus:border-moss transition file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:bg-sage file:text-moss file:text-sm"
+                className="w-full border border-moss/25 rounded-xl px-4 py-2.5 text-charcoal/70 bg-white/60 text-sm focus:outline-none focus:ring-2 focus:ring-moss/40 transition file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:bg-moss file:text-white file:text-sm"
               />
             </div>
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-forest hover:bg-forest/90 text-sage font-semibold py-2.5 rounded-xl transition duration-200 mt-2"
+              className="w-full bg-forest hover:bg-forest/90 text-sage font-semibold py-2.5 rounded-xl transition duration-200"
             >
               {loading ? 'Posting...' : 'Post item'}
             </button>
-
           </form>
         </div>
 
