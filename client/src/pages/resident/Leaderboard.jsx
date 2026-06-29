@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import Navbar from '../../components/Navbar'
 import axios from '../../utils/axios'
 import { useAuth } from '../../context/AuthContext'
+import leaderboardImg from '../../assets/illustrations/leaderboard.jpeg'
 
 const levelEmoji = {
   'Seedling': '🌱',
@@ -44,44 +45,38 @@ const Leaderboard = () => {
   const podiumOrder = [top3[1], top3[0], top3[2]].filter(Boolean)
 
   const podiumStyles = [
-    { height: 'h-24', bg: 'bg-charcoal/30', label: '2nd', medal: '🥈', textSize: 'text-lg' },
-    { height: 'h-32', bg: 'bg-clay/80', label: '1st', medal: '🥇', textSize: 'text-xl' },
-    { height: 'h-16', bg: 'bg-moss', label: '3rd', medal: '🥉', textSize: 'text-base' },
+    { height: 'h-24', bg: 'bg-charcoal/30', label: '2nd', medal: '🥈' },
+    { height: 'h-32', bg: 'bg-clay/80', label: '1st', medal: '🥇' },
+    { height: 'h-16', bg: 'bg-moss', label: '3rd', medal: '🥉' },
   ]
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-sage to-cream">
       <Navbar />
+      <div className="max-w-2xl mx-auto px-6 py-8">
 
-      <div className="max-w-2xl mx-auto px-6 py-10">
-
-        {/* Hero banner */}
-        <div className="bg-forest rounded-2xl p-8 mb-8 text-center relative overflow-hidden">
-          <span className="absolute top-4 left-8 text-sage/20 text-4xl">★</span>
-          <span className="absolute top-8 right-12 text-sage/15 text-2xl">★</span>
-          <span className="absolute bottom-4 left-16 text-clay/30 text-3xl">★</span>
-          <span className="absolute bottom-6 right-8 text-sage/20 text-xl">★</span>
-
-          <p className="text-clay text-xs uppercase tracking-widest font-medium mb-2 relative z-10">
-            {user?.district} District
-          </p>
-          <h1 className="font-display text-4xl font-medium text-sage mb-2 relative z-10">
-            Top Recyclers
-          </h1>
-          <p className="text-sage/60 text-sm relative z-10">
-            The greenest heroes in your community this season
-          </p>
-          <div className="mt-4 flex justify-center gap-2 relative z-10">
-            <span className="px-3 py-1 bg-sage/10 text-sage text-xs rounded-full border border-sage/20">
-              ♻️ Points earned by weight recycled
-            </span>
+        {/* Banner */}
+        <div className="bg-forest rounded-2xl overflow-hidden mb-5 flex items-stretch">
+          <div className="p-7 flex-1 flex flex-col justify-center">
+            <p className="text-clay text-xs uppercase tracking-widest font-medium mb-1">{user?.district} District</p>
+            <h1 className="font-display text-2xl font-medium text-sage mb-1">Top Recyclers</h1>
+            <p className="text-sage/65 text-sm leading-relaxed">
+              The greenest heroes in your community — ranked by total points earned.
+            </p>
+          </div>
+          <div className="w-40 bg-white flex items-center justify-center p-3 hidden sm:flex">
+            <img
+              src={leaderboardImg}
+              alt="Leaderboard illustration"
+              className="w-full h-full object-contain"
+            />
           </div>
         </div>
 
         {/* Podium — top 3 */}
         {top3.length > 0 && (
-          <div className="bg-moss/20 rounded-2xl border border-moss/25 p-8 mb-5">
-            <p className="text-center text-xs text-forest/60 uppercase tracking-widest mb-6">Podium</p>
+          <div className="bg-moss/20 rounded-2xl border border-moss/25 p-6 mb-4">
+            <p className="text-center text-xs text-forest/60 uppercase tracking-widest mb-5">Podium</p>
 
             <div className="flex justify-center items-end gap-6 mb-2">
               {podiumOrder.map((leader, i) => {
@@ -90,13 +85,13 @@ const Leaderboard = () => {
                 return leader ? (
                   <div key={leader.id} className="flex flex-col items-center gap-1">
                     <span className="text-2xl">{style.medal}</span>
-                    <div className={`w-14 h-14 rounded-full bg-forest flex items-center justify-center text-sage font-display font-semibold text-lg border-2 ${isYou ? 'border-clay' : 'border-moss/40'}`}>
+                    <div className={`w-12 h-12 rounded-full bg-forest flex items-center justify-center text-sage font-display font-semibold text-base border-2 ${isYou ? 'border-clay' : 'border-moss/40'}`}>
                       {leader.name.charAt(0).toUpperCase()}
                     </div>
-                    <p className={`font-medium text-charcoal text-center leading-tight ${style.textSize} max-w-[80px] truncate`}>
+                    <p className="font-medium text-charcoal text-xs text-center leading-tight max-w-[72px] truncate">
                       {leader.name}{isYou ? ' 👋' : ''}
                     </p>
-                    <p className="text-xs text-charcoal/50">{leader.points} pts</p>
+                    <p className="text-[10px] text-charcoal/50">{leader.points} pts</p>
                   </div>
                 ) : null
               })}
@@ -106,8 +101,8 @@ const Leaderboard = () => {
               {podiumOrder.map((leader, i) => {
                 const style = podiumStyles[i]
                 return leader ? (
-                  <div key={`block-${leader.id}`} className={`w-20 ${style.height} ${style.bg} rounded-t-xl flex items-center justify-center`}>
-                    <span className="text-white/90 font-display font-medium text-sm">{style.label}</span>
+                  <div key={`block-${leader.id}`} className={`w-16 ${style.height} ${style.bg} rounded-t-xl flex items-center justify-center`}>
+                    <span className="text-white/90 font-display font-medium text-xs">{style.label}</span>
                   </div>
                 ) : null
               })}
@@ -116,12 +111,12 @@ const Leaderboard = () => {
         )}
 
         {/* Full rankings list */}
-        <div className="bg-moss/20 rounded-2xl border border-moss/25 p-6">
-          <p className="text-xs text-forest/60 uppercase tracking-widest mb-4">Full rankings</p>
+        <div className="bg-moss/20 rounded-2xl border border-moss/25 p-5">
+          <p className="text-xs text-forest/60 uppercase tracking-widest mb-3">Full rankings</p>
 
           {leaders.length === 0 ? (
             <div className="text-center py-10">
-              <p className="text-4xl mb-3">🌱</p>
+              <p className="text-3xl mb-3">🌱</p>
               <p className="text-charcoal/50 text-sm">No recyclers yet in your district — be the first!</p>
             </div>
           ) : (
@@ -129,12 +124,12 @@ const Leaderboard = () => {
               {leaders.map((leader, index) => (
                 <div
                   key={leader.id}
-                  className={`flex items-center gap-4 px-4 py-3 rounded-xl transition
+                  className={`flex items-center gap-3 px-4 py-3 rounded-xl transition
                     ${leader.id === user?.id
                       ? 'bg-forest/20 border border-moss/40'
-                      : 'bg-moss/10 border border-moss/15'}`}
+                      : 'bg-white/60 border border-moss/15'}`}
                 >
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold flex-shrink-0
+                  <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-semibold flex-shrink-0
                     ${index === 0 ? 'bg-clay/30 text-clay' :
                       index === 1 ? 'bg-charcoal/15 text-charcoal/60' :
                       index === 2 ? 'bg-moss/30 text-moss' :
@@ -143,7 +138,7 @@ const Leaderboard = () => {
                     {index + 1}
                   </div>
 
-                  <div className="w-9 h-9 rounded-full bg-forest flex items-center justify-center text-sage font-display font-semibold flex-shrink-0">
+                  <div className="w-8 h-8 rounded-full bg-forest flex items-center justify-center text-sage font-display font-semibold text-sm flex-shrink-0">
                     {leader.name.charAt(0).toUpperCase()}
                   </div>
 
