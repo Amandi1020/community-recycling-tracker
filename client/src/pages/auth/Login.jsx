@@ -7,10 +7,7 @@ import heroLogin from '../../assets/illustrations/hero-login.jpeg'
 const Login = () => {
   const navigate = useNavigate()
   const { login } = useAuth()
-  const [formData, setFormData] = useState({
-    email: '',
-    password: ''
-  })
+  const [formData, setFormData] = useState({ email: '', password: '' })
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
@@ -22,18 +19,12 @@ const Login = () => {
     e.preventDefault()
     setLoading(true)
     setError('')
-
     try {
       const res = await axios.post('/auth/login', formData)
       login(res.data.user, res.data.token)
-
-      if (res.data.user.role === 'admin') {
-        navigate('/admin/dashboard')
-      } else if (res.data.user.role === 'collector') {
-        navigate('/collector/dashboard')
-      } else {
-        navigate('/resident/dashboard')
-      }
+      if (res.data.user.role === 'admin') navigate('/admin/dashboard')
+      else if (res.data.user.role === 'collector') navigate('/collector/dashboard')
+      else navigate('/resident/dashboard')
     } catch (err) {
       setError(err.response?.data?.message || 'Login failed')
     } finally {
@@ -45,25 +36,35 @@ const Login = () => {
     <div className="min-h-screen bg-cream flex items-center justify-center p-4 sm:p-8">
       <div className="w-full max-w-5xl bg-white rounded-[2.5rem] overflow-hidden shadow-xl flex flex-col lg:flex-row min-h-[600px]">
 
-        {/* Left — illustration fills entire half */}
-        <div className="lg:w-1/2 relative overflow-hidden">
+        {/* Mobile top image strip — visible only on small screens */}
+        <div className="lg:hidden w-full h-70 bg-forest relative overflow-hidden flex-shrink-0">
+          <img
+            src={heroLogin}
+            alt="EcoTrack illustration"
+            className="w-full h-full object-cover object-center"
+          />
+          <div className="absolute inset-0 bg-forest/40"></div>
+          <div className="absolute top-4 left-5 flex items-center gap-2 z-10">
+            <span className="text-2xl">♻️</span>
+            <span className="font-display text-xl font-semibold text-white drop-shadow-md">EcoTrack</span>
+          </div>
+        </div>
 
-          {/* Illustration — fills the whole panel */}
+        {/* Desktop left panel — full image, hidden on mobile */}
+        <div className="hidden lg:block lg:w-1/2 relative overflow-hidden">
           <img
             src={heroLogin}
             alt="Person recycling illustration"
             className="w-full h-full object-cover absolute inset-0"
           />
-
-          {/* Brand mark */}
           <div className="absolute top-8 left-8 flex items-center gap-2.5 z-10">
             <span className="text-3xl">♻️</span>
             <span className="font-display text-2xl font-semibold text-white drop-shadow-md">EcoTrack</span>
           </div>
         </div>
 
-        {/* Right — dark green form panel */}
-        <div className="lg:w-1/2 bg-forest flex items-center justify-center p-10 sm:p-14">
+        {/* Right panel — form */}
+        <div className="w-full lg:w-1/2 bg-forest flex items-center justify-center p-8 sm:p-14">
           <div className="w-full max-w-sm">
 
             <h2 className="font-display text-4xl font-medium text-sage mb-8 tracking-wide">Login</h2>
@@ -87,7 +88,7 @@ const Login = () => {
                     value={formData.email}
                     onChange={handleChange}
                     required
-                    className="w-full bg-moss/30 border border-sage/20 rounded-full pl-11 pr-4 py-3 text-sage placeholder-sage/40 focus:outline-none focus:ring-2 focus:ring-sage/40 focus:border-sage/40 transition"
+                    className="w-full bg-moss/30 border border-sage/20 rounded-full pl-11 pr-4 py-3 text-sage placeholder-sage/40 focus:outline-none focus:ring-2 focus:ring-sage/40 transition"
                     placeholder="you@example.com"
                   />
                 </div>
@@ -105,7 +106,7 @@ const Login = () => {
                     value={formData.password}
                     onChange={handleChange}
                     required
-                    className="w-full bg-moss/30 border border-sage/20 rounded-full pl-11 pr-4 py-3 text-sage placeholder-sage/40 focus:outline-none focus:ring-2 focus:ring-sage/40 focus:border-sage/40 transition"
+                    className="w-full bg-moss/30 border border-sage/20 rounded-full pl-11 pr-4 py-3 text-sage placeholder-sage/40 focus:outline-none focus:ring-2 focus:ring-sage/40 transition"
                     placeholder="Enter your password"
                   />
                 </div>
