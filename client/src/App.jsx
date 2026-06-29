@@ -11,6 +11,7 @@ import History from './pages/collector/History'
 import AdminDashboard from './pages/admin/Dashboard'
 import Users from './pages/admin/Users'
 import PrivateRoute from './components/PrivateRoute'
+import Categories from './pages/admin/Categories'
 
 function App() {
   return (
@@ -68,6 +69,11 @@ function App() {
         <Route path="/admin/users" element={
           <PrivateRoute role="admin">
             <Users />
+          </PrivateRoute>
+        } />
+        <Route path="/admin/categories" element={
+          <PrivateRoute role="admin">
+            <Categories />
           </PrivateRoute>
         } />
 
