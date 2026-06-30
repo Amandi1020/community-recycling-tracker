@@ -22,7 +22,10 @@ const Users = () => {
     fetchUsers()
   }, [])
 
-  const filtered = filter === 'all' ? users : users.filter(u => u.role === filter)
+  const filtered = filter === 'all' ? users
+    : ['pending', 'inactive', 'active'].includes(filter)
+    ? users.filter(u => u.status === filter)
+    : users.filter(u => u.role === filter)
 
   if (loading) {
     return (
@@ -78,8 +81,8 @@ const Users = () => {
         </div>
 
         {/* Filter tabs */}
-        <div className="flex gap-2 mb-4">
-          {['all', 'resident', 'collector', 'admin'].map(role => (
+        <div className="flex gap-2 mb-4 flex-wrap">
+          {['all', 'resident', 'collector', 'admin', 'pending', 'inactive'].map(role => (
             <button
               key={role}
               onClick={() => setFilter(role)}
