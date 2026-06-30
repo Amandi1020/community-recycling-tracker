@@ -26,6 +26,7 @@ const Navbar = () => {
     admin: [
       { to: '/admin/dashboard', label: 'Dashboard' },
       { to: '/admin/users', label: 'Users' },
+      { to: '/admin/collectors', label: 'Collectors' },
       { to: '/admin/categories', label: 'Categories' },
     ]
   }

@@ -12,6 +12,7 @@ import AdminDashboard from './pages/admin/Dashboard'
 import Users from './pages/admin/Users'
 import PrivateRoute from './components/PrivateRoute'
 import Categories from './pages/admin/Categories'
+import Collectors from './pages/admin/Collectors'
 
 function App() {
   return (
@@ -76,6 +77,11 @@ function App() {
             <Categories />
           </PrivateRoute>
         } />
+        <Route path="/admin/collectors" element={
+  <PrivateRoute role="admin">
+    <Collectors />
+  </PrivateRoute>
+} />
 
       </Routes>
     </BrowserRouter>
