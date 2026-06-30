@@ -33,9 +33,8 @@ const Login = () => {
   }
 
   return (
-    <div className="min-h-screen bg-cream flex items-center justify-center p-4 sm:p-8">
-      <div className="w-full max-w-5xl bg-white rounded-[2.5rem] overflow-hidden shadow-xl flex flex-col lg:flex-row min-h-[600px]">
-
+    <div className="min-h-screen flex flex-col lg:flex-row">
+      <div className="w-full flex flex-col lg:flex-row min-h-screen">
         {/* Mobile top image strip — visible only on small screens */}
         <div className="lg:hidden w-full h-70 bg-forest relative overflow-hidden flex-shrink-0">
           <img
@@ -49,7 +48,7 @@ const Login = () => {
             <span className="font-display text-xl font-semibold text-white drop-shadow-md">EcoTrack</span>
           </div>
         </div>
-
+        
         {/* Desktop left panel — full image, hidden on mobile */}
         <div className="hidden lg:block lg:w-1/2 relative overflow-hidden">
           <img
