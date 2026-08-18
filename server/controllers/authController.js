@@ -2,12 +2,10 @@ import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import db from '../config/db.js'
 
-// Register
 export const register = async (req, res) => {
   const { name, email, password, role, district } = req.body
 
   try {
-    // Check if email already exists
     const [existing] = await db.execute(
       'SELECT * FROM users WHERE email = ?',
       [email]
@@ -17,16 +15,19 @@ export const register = async (req, res) => {
       return res.status(400).json({ message: 'Email already registered' })
     }
 
-    // Hash the password
     const password_hash = await bcrypt.hash(password, 10)
+    const status = role === 'collector' ? 'pending' : 'active'
 
-    // Insert new user
     await db.execute(
-      'INSERT INTO users (name, email, password_hash, role, district) VALUES (?, ?, ?, ?, ?)',
-      [name, email, password_hash, role, district]
+      'INSERT INTO users (name, email, password_hash, role, district, status) VALUES (?, ?, ?, ?, ?, ?)',
+      [name, email, password_hash, role, district, status]
     )
 
-    res.status(201).json({ message: 'Registration successful!' })
+    const message = role === 'collector'
+      ? 'Registration successful! Your account is pending admin approval.'
+      : 'Registration successful!'
+
+    res.status(201).json({ message })
 
   } catch (err) {
     console.error(err)
@@ -34,34 +35,34 @@ export const register = async (req, res) => {
   }
 }
 
-// Login
 export const login = async (req, res) => {
   const { email, password } = req.body
 
   try {
-    // Find user by email
     const [users] = await db.execute(
       'SELECT * FROM users WHERE email = ?',
       [email]
     )
-
-    
 
     if (users.length === 0) {
       return res.status(400).json({ message: 'Invalid email or password' })
     }
 
     const user = users[0]
-    
 
-    // Check password
     const isMatch = await bcrypt.compare(password, user.password_hash)
-    
     if (!isMatch) {
       return res.status(400).json({ message: 'Invalid email or password' })
     }
 
-    // Create JWT token
+    if (user.status === 'pending') {
+      return res.status(403).json({ message: 'Your account is pending admin approval. Please wait.' })
+    }
+
+    if (user.status === 'inactive') {
+      return res.status(403).json({ message: 'Your account has been deactivated. Please contact admin.' })
+    }
+
     const token = jwt.sign(
       { id: user.id, role: user.role, district: user.district },
       process.env.JWT_SECRET,
@@ -86,5 +87,3 @@ export const login = async (req, res) => {
     res.status(500).json({ message: 'Server error' })
   }
 }
-
-    
