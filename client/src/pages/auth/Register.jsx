@@ -33,15 +33,19 @@ const Register = () => {
     setError('')
 
     try {
-      await axios.post('/auth/register', formData)
-      navigate('/login')
+      const res = await axios.post('/auth/register', formData)
+      if (formData.role === 'collector') {
+        navigate('/login?msg=pending')
+      } else {
+        navigate('/login')
+      }
     } catch (err) {
       setError(err.response?.data?.message || 'Registration failed')
     } finally {
       setLoading(false)
     }
   }
-
+  
   return (
     <div className="min-h-screen bg-cream flex">
 
