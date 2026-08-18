@@ -52,9 +52,9 @@ const Dashboard = () => {
               Monitor system-wide recycling activity, user growth and district performance.
             </p>
             {stats?.pending_collectors > 0 && (
-              <div className="mt-3 inline-flex items-center gap-2 bg-clay/20 text-clay text-xs font-medium px-3 py-1.5 rounded-full w-fit">
-                ⚠️ {stats.pending_collectors} collector{stats.pending_collectors > 1 ? 's' : ''} awaiting approval
-              </div>
+              <a href="/admin/collectors" className="mt-3 inline-flex items-center gap-2 bg-clay/20 text-clay text-xs font-medium px-3 py-1.5 rounded-full w-fit hover:bg-clay/30 transition">
+                ⚠️ {stats.pending_collectors} collector{stats.pending_collectors > 1 ? 's' : ''} awaiting approval — click to review
+              </a>
             )}
           </div>
           <div className="w-40 bg-white flex items-center justify-center p-3 hidden sm:flex">
