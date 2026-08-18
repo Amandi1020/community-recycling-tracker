@@ -1,3 +1,4 @@
+import { useSearchParams } from 'react-router-dom'
 import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import axios from '../../utils/axios'
@@ -10,6 +11,9 @@ const Login = () => {
   const [formData, setFormData] = useState({ email: '', password: '' })
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [searchParams] = useSearchParams()
+
+  const pendingMsg = searchParams.get('msg') === 'pending'
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
@@ -68,12 +72,18 @@ const Login = () => {
 
             <h2 className="font-display text-4xl font-medium text-sage mb-8 tracking-wide">Login</h2>
 
+            {pendingMsg && (
+              <div className="bg-moss/20 text-sage border border-moss/30 px-4 py-3 rounded-full mb-5 text-sm text-center">
+                ✅ Registration successful! Your collector account is pending admin approval.
+              </div>
+            )}
+
             {error && (
               <div className="bg-clay/15 text-clay border border-clay/30 px-4 py-3 rounded-full mb-5 text-sm text-center">
                 {error}
               </div>
             )}
-
+            
             <form onSubmit={handleSubmit} className="space-y-5">
               <div>
                 <label className="block text-sm font-medium text-sage/70 mb-2">Email</label>
