@@ -1,20 +1,26 @@
 # ♻️ EcoTrack — Community Recycling Tracker
 
-> A gamified full-stack web platform that connects residents with recycling collectors across Sri Lanka's districts. Residents post recyclable items, collectors claim and pick them up, and everyone tracks their environmental impact through points, levels, and badges.
-
-![EcoTrack Banner](client/src/assets/illustrations/hero-login.jpeg)
-
-🔗 **Live Demo:** _coming soon_  
-🎥 **Demo Video:** _coming soon_  
-📁 **GitHub:** [github.com/Amandi1020/community-recycling-tracker](https://github.com/Amandi1020/community-recycling-tracker)
+> A gamified full-stack web platform that connects residents with recycling collectors across Sri Lanka's 25 districts. Residents post recyclable items, collectors claim and pick them up, and everyone tracks their environmental impact through points, levels, badges and a district leaderboard.
 
 ---
 
-## 📌 Overview
+## 🌍 Real-World Problem
 
-EcoTrack solves a real community problem — making recycling easy, rewarding, and trackable. Instead of recyclables going to waste, residents list items they want to give away, and collectors in the same district browse and claim them. Every successful collection earns the resident points, contributing to their level, badges, and the district leaderboard.
+Sri Lanka generates over **7,500 tonnes of solid waste every day**. A significant portion is recyclable — plastic, paper, metal, glass, e-waste — but most ends up in landfills because there's no organized way to connect people who have recyclables with people who can collect them.
 
-This project was built as a portfolio piece applying **Management Information Systems** concepts — role-based access control, data-driven decision making, gamification systems, and real-world workflows — in a deployable full-stack application.
+**EcoTrack solves this by:**
+- Giving residents a simple way to list recyclable items for pickup
+- Giving collectors a district-scoped browsing platform to find and claim items
+- Rewarding recycling behavior through gamification — points, levels and badges
+- Giving administrators real data on district-level recycling performance
+
+---
+
+## 🎯 Target Audience
+
+- **Residents** — Urban and suburban Sri Lankans who want to recycle but lack access to collectors
+- **Collectors & recycling centres** — Who do community-based collection but need a platform to connect with residents
+- **Admins / NGOs** — Who need district-level recycling data for policy and environmental programs
 
 ---
 
@@ -24,29 +30,43 @@ This project was built as a portfolio piece applying **Management Information Sy
 - Register and post recyclable items with photos
 - Visual category picker with icons (Plastic, Paper, E-Waste, Glass, Metal)
 - Track listing status in real time — available → claimed → collected
-- Personal impact dashboard — points, level, CO₂ saved, monthly donut chart
+- Personal impact dashboard with points, level, CO₂ saved and monthly donut chart
 - Earn achievement badges for recycling milestones
 - District leaderboard with podium for top 3 recyclers
+- Quick action shortcuts on dashboard
 
 ### 🚛 Collector
+- Register (requires admin approval before login)
 - Browse available items filtered by district and category
 - Claim items for pickup with one click
 - Mark items as collected to trigger resident point awards
 - Collection history with stats — total collections, kg collected, pending pickups
+- Collector dashboard with quick actions
 
 ### ⚙️ Admin
-- System-wide analytics — bar chart (listings by district), pie chart (items by category), line chart (monthly trend)
-- Approve, deactivate or delete user accounts with search and dual role/status filters
-- Dedicated collector approval workflow — pending → approved → active
-- Edit category point values and CO₂ coefficients in real time
+- System-wide analytics dashboard with 3 charts:
+  - 📊 Bar chart — listings by district
+  - 🥧 Pie chart — items by category
+  - 📈 Line chart — monthly recycling trend
+- **Manage Users** — search by name/email/district, filter by role AND status, approve/deactivate/delete accounts
+- **Manage Collectors** — dedicated approval workflow with pending/active/inactive sections
+- **Manage Categories** — edit points per kg and CO₂ coefficients in real time
 - District breakdown table with recycling stats per area
+- Clickable pending collector alert linking directly to approval page
 
 ### 🎮 Gamification
-- Points awarded automatically per kg based on recyclable category
+- Points awarded automatically per kg × category coefficient when collected
 - **4 levels:** Seedling 🌱 → Sprout 🌿 → Guardian 🌳 → Eco Hero 🏆
 - **Achievement badges:** First Drop, E-Waste Warrior, 100kg Club, Eco Hero
-- CO₂ saved calculator (auto-calculated from weight × category coefficient)
-- District leaderboard showing rankings, levels and kg recycled
+- CO₂ saved calculator auto-updated on every collection
+- District leaderboard with podium, avatar initials and rank medals
+
+### 🔐 Security
+- JWT authentication with 7-day expiry
+- Role-based route protection (resident / collector / admin)
+- Pending and inactive users blocked from logging in
+- bcrypt password hashing
+- Admin-only protected API routes
 
 ---
 
@@ -54,12 +74,12 @@ This project was built as a portfolio piece applying **Management Information Sy
 
 | Layer | Technology |
 |---|---|
-| Frontend | React 18 (Vite), Tailwind CSS v4, React Router, Recharts, Axios |
+| Frontend | React 18 (Vite), Tailwind CSS v4, React Router v6, Recharts, Axios |
 | Backend | Node.js, Express.js |
-| Database | MySQL |
-| Authentication | JWT (JSON Web Tokens), bcrypt |
+| Database | MySQL 8 |
+| Authentication | JWT, bcrypt |
 | File Uploads | Multer |
-| Fonts | Fraunces (display), Inter (body) |
+| Fonts | Fraunces (display), Inter (body) — Google Fonts |
 
 ---
 
@@ -73,34 +93,34 @@ community-recycling-tracker/
 │       │   ├── illustrations/       # Page hero images
 │       │   └── icons/               # Category & badge icons
 │       ├── components/
-│       │   ├── Navbar.jsx
-│       │   └── PrivateRoute.jsx
+│       │   ├── Navbar.jsx           # Role-based navigation
+│       │   └── PrivateRoute.jsx     # Route protection
 │       ├── context/
-│       │   └── AuthContext.jsx
+│       │   └── AuthContext.jsx      # Global auth state
 │       ├── pages/
 │       │   ├── auth/                # Login, Register
 │       │   ├── resident/            # Dashboard, PostItem, MyListings, Leaderboard
 │       │   ├── collector/           # Dashboard, BrowseItems, History
 │       │   └── admin/               # Dashboard, Users, Collectors, Categories
 │       └── utils/
-│           └── axios.js
+│           └── axios.js             # Axios instance with JWT interceptor
 ├── server/                          # Node.js backend
 │   ├── config/
-│   │   ├── db.js
-│   │   └── schema.sql
+│   │   ├── db.js                    # MySQL connection pool
+│   │   └── schema.sql               # Database schema + seed data
 │   ├── controllers/
 │   │   ├── authController.js
 │   │   ├── residentController.js
 │   │   ├── collectorController.js
 │   │   └── adminController.js
 │   ├── middleware/
-│   │   └── auth.js
+│   │   └── auth.js                  # JWT verification middleware
 │   ├── routes/
 │   │   ├── authRoutes.js
 │   │   ├── residentRoutes.js
 │   │   ├── collectorRoutes.js
 │   │   └── adminRoutes.js
-│   └── uploads/
+│   └── uploads/                     # Uploaded item photos
 └── README.md
 ```
 
@@ -135,17 +155,19 @@ DB_NAME=recycling_tracker
 JWT_SECRET=your_secret_key
 ```
 
-Create the database and run the schema:
+Create the database in MySQL:
 ```sql
 CREATE DATABASE recycling_tracker;
 ```
-Then run `server/config/schema.sql` in MySQL Workbench.
+
+Run the schema file in MySQL Workbench to create all tables and seed data:
+`server/config/schema.sql`
 
 Start the backend:
 ```bash
 npm run dev
 ```
-Backend runs at `http://localhost:5000`
+Runs at `http://localhost:5000`
 
 ### 3. Frontend setup
 ```bash
@@ -153,43 +175,48 @@ cd client
 npm install
 npm run dev
 ```
-Frontend runs at `http://localhost:5173`
+Runs at `http://localhost:5173`
 
 ### 4. Create admin account
-Run this in MySQL Workbench after setup:
+
+Run this in MySQL Workbench after setup — generate a bcrypt hash first using the `createAdmin.js` utility:
+```bash
+cd server
+node createAdmin.js
+```
+Or insert directly:
 ```sql
 USE recycling_tracker;
 INSERT INTO users (name, email, password_hash, role, district, status)
 VALUES ('Admin', 'admin@ecotrack.com', '<bcrypt_hash>', 'admin', 'Colombo', 'active');
 ```
-Or use the `createAdmin.js` utility script in the server folder.
 
 ---
 
 ## 🗄️ Database Schema
 
-6 core tables supporting the full platform:
-
 | Table | Purpose |
 |---|---|
 | `users` | Residents, collectors and admins with role, district, points, level and status |
 | `categories` | Recyclable types with points_per_kg and co2_per_kg coefficients |
-| `listings` | Items posted by residents with status tracking |
+| `listings` | Items posted by residents with photo and status tracking |
 | `claims` | Collector pickup records linking listings to collectors |
 | `badges` | Achievement definitions with unlock conditions |
-| `user_badges` | Junction table tracking which users have earned which badges |
+| `user_badges` | Junction table tracking earned badges per user |
 
 ---
 
 ## 🌍 District System
 
-EcoTrack operates at **district level** across all 25 Sri Lanka districts. Users select their district at registration, and all listings, collectors, and leaderboards are automatically scoped to that district. This makes the platform practical for real community use — a collector in Kandy only sees items from Kandy residents.
+EcoTrack operates at **district level** across all 25 Sri Lanka districts. Users select their district at registration. All listings, collectors, leaderboards and admin stats are automatically scoped to the correct district — a collector in Kurunegala only sees items from Kurunegala residents.
 
 ---
 
-## 🎯 CO₂ Calculation
+## ♻️ CO₂ Calculation
 
-Each category stores a `co2_per_kg` coefficient based on real-world carbon offset data:
+Each category stores a `co2_per_kg` coefficient. When a collector marks an item collected:
+
+`co2_saved = weight_kg × co2_per_kg`
 
 | Category | Points/kg | CO₂ saved/kg |
 |---|---|---|
@@ -199,45 +226,65 @@ Each category stores a `co2_per_kg` coefficient based on real-world carbon offse
 | Glass | 8 | 0.7 kg |
 | Metal | 15 | 1.8 kg |
 
-When a collector marks an item as collected: `co2_saved = weight_kg × co2_per_kg`. The resident's CO₂ counter updates automatically on their dashboard.
+---
+
+## 🔄 Core Workflow
+
+```
+Resident registers → Posts recyclable item with photo
+        ↓
+Collector browses district listings → Claims item
+        ↓
+Collector picks up item → Marks as collected
+        ↓
+Resident earns points → Level updates → Badges awarded
+        ↓
+Admin monitors district stats → Approves collectors → Adjusts categories
+```
 
 ---
 
-## 🔐 User Roles & Access
+## 👤 User Roles & Access
 
-| Role | Registration | Access |
-|---|---|---|
-| Resident | Self-register | Post items, dashboard, leaderboard |
-| Collector | Self-register (requires admin approval) | Browse items, claim, history |
-| Admin | Created directly in database | Full system management |
+| Role | Registration | Login Condition | Access |
+|---|---|---|---|
+| Resident | Self-register | Immediate | Post items, dashboard, leaderboard |
+| Collector | Self-register | Requires admin approval | Browse, claim, history |
+| Admin | Database only | Always active | Full system management |
 
 ---
 
 ## 🚀 Future Improvements
 
-- Live deployment (Vercel + Railway)
-- Collector service radius selection (beyond district-level)
-- In-app notifications for claimed items
-- Resident-to-collector ratings and reviews
+- Live deployment (Vercel + PlanetScale)
+- Collector service radius selection beyond district level
+- In-app real-time notifications for claimed items
+- Resident-to-collector star ratings
 - PDF monthly impact report export
 - SMS/email notifications via Twilio or EmailJS
 - Mobile app version (React Native)
-- Map view for listing locations
+- Map view showing listing locations
 
 ---
 
 ## 📸 Screenshots
 
-_Coming soon — demo video and screenshots will be added after deployment._
+_Coming soon after deployment_
 
 ---
 
-## 👩‍💻 About
+## 🎓 About This Project
 
-Built by **Amandi** — 2nd Year MIS Undergraduate  
-This project was built to demonstrate full-stack development skills, MIS concepts, and real-world system design for internship applications.
+Built by **Amandi** — 2nd Year MIS Undergraduate
 
-[![GitHub](https://img.shields.io/badge/GitHub-Amandi1020-forest?style=flat&logo=github)](https://github.com/Amandi1020)
+This project was developed as a portfolio piece demonstrating full-stack development and core MIS concepts:
+- Role-based access control
+- Data-driven decision making
+- Gamification systems
+- Real-world workflow management
+- Information systems for community problem solving
+
+[![GitHub](https://img.shields.io/badge/GitHub-Amandi1020-4A6B4D?style=flat&logo=github)](https://github.com/Amandi1020)
 
 ---
 
