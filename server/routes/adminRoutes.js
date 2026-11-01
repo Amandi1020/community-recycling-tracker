@@ -1,14 +1,29 @@
 import express from 'express'
-import { getDashboard, getUsers, updateUserStatus, deleteUser, getCategories, updateCategory } from '../controllers/adminController.js'
-import verifyToken from '../middleware/auth.js'
+import {
+  getDashboard,
+  getUsers,
+  updateUserStatus,
+  deleteUser,
+  getCategories,
+  createCategory,
+  updateCategory,
+  deleteCategory,
+  getAuditLogs
+} from '../controllers/adminController.js'
+import verifyToken, { requireRole } from '../middleware/auth.js'
 
 const router = express.Router()
 
-router.get('/dashboard', verifyToken, getDashboard)
-router.get('/users', verifyToken, getUsers)
-router.put('/users/:userId/status', verifyToken, updateUserStatus)
-router.delete('/users/:userId', verifyToken, deleteUser)
-router.get('/categories', verifyToken, getCategories)
-router.put('/categories/:categoryId', verifyToken, updateCategory)
+router.use(verifyToken, requireRole('admin'))
+
+router.get('/dashboard', getDashboard)
+router.get('/users', getUsers)
+router.put('/users/:userId/status', updateUserStatus)
+router.delete('/users/:userId', deleteUser)
+router.get('/categories', getCategories)
+router.post('/categories', createCategory)
+router.put('/categories/:categoryId', updateCategory)
+router.delete('/categories/:categoryId', deleteCategory)
+router.get('/audit-logs', getAuditLogs)
 
 export default router

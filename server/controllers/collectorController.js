@@ -205,9 +205,12 @@ export const getHistory = async (req, res) => {
   const [summaryRows] = await db.execute(
     `SELECT
        COUNT(*) AS total,
-       COALESCE(SUM(status = 'collected'), 0) AS completed,
-       COALESCE(SUM(CASE WHEN status = 'collected' THEN COALESCE(weight_kg, 0) ELSE 0 END), 0) AS kg_collected
-     FROM claims WHERE collector_id = ?`,
+       COALESCE(SUM(cl.status = 'collected'), 0) AS completed,
+       COALESCE(SUM(CASE WHEN cl.status = 'collected'
+         THEN COALESCE(cl.weight_kg, l.weight_kg) ELSE 0 END), 0) AS kg_collected
+     FROM claims cl
+     JOIN listings l ON l.id = cl.listing_id
+     WHERE cl.collector_id = ?`,
     [req.user.id]
   )
 

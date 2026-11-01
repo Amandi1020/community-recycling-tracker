@@ -1,39 +1,46 @@
-import express from 'express'
-import cors from 'cors'
-import dotenv from 'dotenv'
-import { fileURLToPath } from 'url'
-import path from 'path'
+import app from './app.js'
 import db from './config/db.js'
-import authRoutes from './routes/authRoutes.js'
-import residentRoutes from './routes/residentRoutes.js'
-import collectorRoutes from './routes/collectorRoutes.js'
-import adminRoutes from './routes/adminRoutes.js'
+import env from './config/env.js'
+import logger from './utils/logger.js'
 
-dotenv.config()
+let server
 
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
+const shutdown = async signal => {
+  logger.info(`${signal} received, shutting down`)
+  const forceExit = setTimeout(() => process.exit(1), 10000)
+  forceExit.unref()
 
-const app = express()
+  server?.close(async () => {
+    try {
+      await db.end()
+    } catch (err) {
+      logger.error('Failed to close database pool', err)
+    }
+    process.exit(0)
+  })
+}
 
-app.use(cors())
-app.use(express.json())
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')))
+const start = async () => {
+  try {
+    const connection = await db.getConnection()
+    connection.release()
+    logger.info('MySQL connected successfully')
 
-db.getConnection()
-  .then(() => console.log('MySQL connected successfully!'))
-  .catch(err => console.error('MySQL connection error:', err))
+    server = app.listen(env.PORT, () => {
+      logger.info(`Server running on port ${env.PORT}`)
+    })
+  } catch (err) {
+    logger.error('Unable to connect to MySQL', err)
+    process.exit(1)
+  }
+}
 
-app.use('/api/auth', authRoutes)
-app.use('/api/resident', residentRoutes)
-app.use('/api/collector', collectorRoutes)
-app.use('/api/admin', adminRoutes)
-
-app.get('/', (req, res) => {
-  res.json({ message: 'Recycling Tracker API is running!' })
+process.on('SIGTERM', () => shutdown('SIGTERM'))
+process.on('SIGINT', () => shutdown('SIGINT'))
+process.on('unhandledRejection', err => logger.error('Unhandled rejection', err))
+process.on('uncaughtException', err => {
+  logger.error('Uncaught exception', err)
+  shutdown('uncaughtException')
 })
 
-const PORT = process.env.PORT || 5000
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`)
-})
+start()

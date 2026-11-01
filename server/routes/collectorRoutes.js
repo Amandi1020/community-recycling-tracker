@@ -1,13 +1,23 @@
 import express from 'express'
-import { getDashboard, browseListings, claimListing, getHistory, markCollected } from '../controllers/collectorController.js'
-import verifyToken from '../middleware/auth.js'
+import {
+  getDashboard,
+  browseListings,
+  claimListing,
+  unclaim,
+  getHistory,
+  markCollected
+} from '../controllers/collectorController.js'
+import verifyToken, { requireRole } from '../middleware/auth.js'
 
 const router = express.Router()
 
-router.get('/dashboard', verifyToken, getDashboard)
-router.get('/browse', verifyToken, browseListings)
-router.post('/claim/:listingId', verifyToken, claimListing)
-router.get('/history', verifyToken, getHistory)
-router.put('/collect/:claimId', verifyToken, markCollected)
+router.use(verifyToken, requireRole('collector'))
+
+router.get('/dashboard', getDashboard)
+router.get('/browse', browseListings)
+router.post('/claim/:listingId', claimListing)
+router.delete('/claim/:claimId', unclaim)
+router.get('/history', getHistory)
+router.put('/collect/:claimId', markCollected)
 
 export default router

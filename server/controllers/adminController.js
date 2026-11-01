@@ -209,6 +209,13 @@ export const deleteUser = async (req, res) => {
     )
     await connection.execute('DELETE FROM user_badges WHERE user_id = ?', [userId])
     await connection.execute(
+      `UPDATE listings l
+       JOIN claims cl ON cl.listing_id = l.id
+       SET l.status = 'available'
+       WHERE cl.collector_id = ? AND cl.status = 'claimed' AND l.status = 'claimed'`,
+      [userId]
+    )
+    await connection.execute(
       `DELETE FROM claims
        WHERE collector_id = ?
           OR listing_id IN (SELECT id FROM listings WHERE user_id = ?)`,
