@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import Navbar from '../../components/Navbar'
 import axios from '../../utils/axios'
 import adminDashboardImg from '../../assets/illustrations/admin-dashboard.jpeg'
@@ -116,8 +117,8 @@ const Dashboard = () => {
                     cx="50%" cy="50%"
                     innerRadius={40} outerRadius={70} paddingAngle={3}
                   >
-                    {stats.categoryStats.map((entry, index) => (
-                      <Cell key={index} fill={COLORS[index % COLORS.length]} />
+                    {stats.categoryStats.filter(c => c.total_listings > 0).map((entry, index) => (
+                      <Cell key={entry.name} fill={COLORS[index % COLORS.length]} />
                     ))}
                   </Pie>
                   <Tooltip contentStyle={{ borderRadius: 10, border: '1px solid #6B8E5A30', fontSize: 11 }} />
@@ -152,10 +153,10 @@ const Dashboard = () => {
         <div className="bg-moss/20 rounded-2xl border border-moss/25 p-5 mb-4">
           <h2 className="font-display text-sm font-medium text-charcoal mb-3">Quick actions</h2>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            <a href="/admin/users" className="bg-forest text-sage text-center text-xs font-medium py-2.5 rounded-xl hover:bg-forest/90 transition">👥 Manage users</a>
-            <a href="/admin/collectors" className="bg-moss text-white text-center text-xs font-medium py-2.5 rounded-xl hover:bg-moss/90 transition">🚛 Approve collectors</a>
-            <a href="/admin/categories" className="bg-clay text-white text-center text-xs font-medium py-2.5 rounded-xl hover:bg-clay/90 transition">⚙️ Edit categories</a>
-            <a href="/admin/users?filter=inactive" className="bg-charcoal/70 text-sage text-center text-xs font-medium py-2.5 rounded-xl hover:bg-charcoal/80 transition">🔒 Inactive users</a>
+            <Link to="/admin/users" className="bg-forest text-sage text-center text-xs font-medium py-2.5 rounded-xl hover:bg-forest/90 transition">👥 Manage users</Link>
+            <Link to="/admin/collectors" className="bg-moss text-white text-center text-xs font-medium py-2.5 rounded-xl hover:bg-moss/90 transition">🚛 Approve collectors</Link>
+            <Link to="/admin/categories" className="bg-clay text-white text-center text-xs font-medium py-2.5 rounded-xl hover:bg-clay/90 transition">⚙️ Edit categories</Link>
+            <Link to="/admin/audit-logs" className="bg-charcoal/70 text-sage text-center text-xs font-medium py-2.5 rounded-xl hover:bg-charcoal/80 transition">📝 Audit logs</Link>
           </div>
         </div>
 

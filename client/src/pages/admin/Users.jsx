@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import Navbar from '../../components/Navbar'
 import axios from '../../utils/axios'
 import adminDashboardImg from '../../assets/illustrations/users.jpeg'
 
 const Users = () => {
   const [users, setUsers] = useState([])
+  const [summary, setSummary] = useState(null)
   const [loading, setLoading] = useState(true)
   const [roleFilter, setRoleFilter] = useState('all')
   const [statusFilter, setStatusFilter] = useState('all')
@@ -12,20 +13,22 @@ const Users = () => {
   const [actionLoading, setActionLoading] = useState(null)
   const [message, setMessage] = useState({ text: '', type: '' })
 
-  useEffect(() => {
-    fetchUsers()
-  }, [])
-
-  const fetchUsers = async () => {
+  const fetchUsers = useCallback(async () => {
     try {
       const res = await axios.get('/admin/users')
-      setUsers(res.data)
+      setUsers(res.data.data)
+      setSummary(res.data.summary)
     } catch (err) {
       console.error(err)
     } finally {
       setLoading(false)
     }
-  }
+  }, [])
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    fetchUsers()
+  }, [fetchUsers])
 
   const showMessage = (text, type = 'success') => {
     setMessage({ text, type })
@@ -36,10 +39,10 @@ const Users = () => {
     setActionLoading(userId)
     try {
       await axios.put(`/admin/users/${userId}/status`, { status })
-      setUsers(users.map(u => u.id === userId ? { ...u, status } : u))
+      await fetchUsers()
       showMessage(`User ${status === 'active' ? 'activated' : status === 'inactive' ? 'deactivated' : 'updated'} successfully`)
     } catch (err) {
-      showMessage('Failed to update user status', 'error')
+      showMessage(err.response?.data?.message || 'Failed to update user status', 'error')
     } finally {
       setActionLoading(null)
     }
@@ -50,10 +53,10 @@ const Users = () => {
     setActionLoading(userId)
     try {
       await axios.delete(`/admin/users/${userId}`)
-      setUsers(users.filter(u => u.id !== userId))
+      await fetchUsers()
       showMessage('User deleted successfully')
     } catch (err) {
-      showMessage('Failed to delete user', 'error')
+      showMessage(err.response?.data?.message || 'Failed to delete user', 'error')
     } finally {
       setActionLoading(null)
     }
@@ -112,23 +115,23 @@ const Users = () => {
         {/* Stats row */}
         <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 mb-5">
           <div className="bg-forest rounded-xl p-4 text-center">
-            <p className="font-display text-xl font-medium text-sage">{users.length}</p>
+            <p className="font-display text-xl font-medium text-sage">{summary?.total ?? users.length}</p>
             <p className="text-[10px] text-sage/55 uppercase tracking-wide mt-0.5">Total</p>
           </div>
           <div className="bg-moss rounded-xl p-4 text-center">
-            <p className="font-display text-xl font-medium text-white">{users.filter(u => u.role === 'resident').length}</p>
+            <p className="font-display text-xl font-medium text-white">{summary?.residents ?? 0}</p>
             <p className="text-[10px] text-white/65 uppercase tracking-wide mt-0.5">Residents</p>
           </div>
           <div className="bg-clay rounded-xl p-4 text-center">
-            <p className="font-display text-xl font-medium text-white">{users.filter(u => u.role === 'collector').length}</p>
+            <p className="font-display text-xl font-medium text-white">{summary?.collectors ?? 0}</p>
             <p className="text-[10px] text-white/65 uppercase tracking-wide mt-0.5">Collectors</p>
           </div>
           <div className="bg-clay/60 rounded-xl p-4 text-center">
-            <p className="font-display text-xl font-medium text-white">{users.filter(u => u.status === 'pending').length}</p>
+            <p className="font-display text-xl font-medium text-white">{summary?.pending ?? 0}</p>
             <p className="text-[10px] text-white/70 uppercase tracking-wide mt-0.5">Pending</p>
           </div>
           <div className="bg-charcoal/60 rounded-xl p-4 text-center">
-            <p className="font-display text-xl font-medium text-sage">{users.filter(u => u.status === 'inactive').length}</p>
+            <p className="font-display text-xl font-medium text-sage">{summary?.inactive ?? 0}</p>
             <p className="text-[10px] text-sage/60 uppercase tracking-wide mt-0.5">Inactive</p>
           </div>
         </div>

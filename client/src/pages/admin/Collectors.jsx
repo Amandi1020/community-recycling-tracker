@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import Navbar from '../../components/Navbar'
 import axios from '../../utils/axios'
 
@@ -8,20 +8,21 @@ const Collectors = () => {
   const [actionLoading, setActionLoading] = useState(null)
   const [message, setMessage] = useState('')
 
-  useEffect(() => {
-    fetchCollectors()
-  }, [])
-
-  const fetchCollectors = async () => {
+  const fetchCollectors = useCallback(async () => {
     try {
-      const res = await axios.get('/admin/users')
-      setCollectors(res.data.filter(u => u.role === 'collector'))
+      const res = await axios.get('/admin/users?role=collector&limit=100')
+      setCollectors(res.data.data.filter(u => u.role === 'collector'))
     } catch (err) {
       console.error(err)
     } finally {
       setLoading(false)
     }
-  }
+  }, [])
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    fetchCollectors()
+  }, [fetchCollectors])
 
   const handleStatusChange = async (userId, status) => {
     setActionLoading(userId)
