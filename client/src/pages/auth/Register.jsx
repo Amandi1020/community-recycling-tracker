@@ -33,7 +33,7 @@ const Register = () => {
     setError('')
 
     try {
-      const res = await axios.post('/auth/register', formData)
+      await axios.post('/auth/register', formData)
       if (formData.role === 'collector') {
         navigate('/login?msg=pending')
       } else {

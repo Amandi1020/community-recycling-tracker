@@ -2,7 +2,7 @@ import { useSearchParams } from 'react-router-dom'
 import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import axios from '../../utils/axios'
-import { useAuth } from '../../context/AuthContext'
+import { useAuth } from '../../context/authContext'
 import heroLogin from '../../assets/illustrations/hero-login.jpeg'
 
 const Login = () => {
@@ -14,6 +14,7 @@ const Login = () => {
   const [searchParams] = useSearchParams()
 
   const pendingMsg = searchParams.get('msg') === 'pending'
+  const resetMsg = searchParams.get('msg') === 'reset'
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
@@ -78,6 +79,12 @@ const Login = () => {
               </div>
             )}
 
+            {resetMsg && (
+              <div className="bg-moss/20 text-sage border border-moss/30 px-4 py-3 rounded-full mb-5 text-sm text-center">
+                ✅ Password reset successful. You can log in with your new password.
+              </div>
+            )}
+
             {error && (
               <div className="bg-clay/15 text-clay border border-clay/30 px-4 py-3 rounded-full mb-5 text-sm text-center">
                 {error}
@@ -104,7 +111,12 @@ const Login = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-sage/70 mb-2">Password</label>
+                <div className="flex items-center justify-between mb-2">
+                  <label className="block text-sm font-medium text-sage/70">Password</label>
+                  <Link to="/forgot-password" className="text-xs text-sage/60 hover:text-sage hover:underline">
+                    Forgot password?
+                  </Link>
+                </div>
                 <div className="relative">
                   <span className="absolute left-4 top-1/2 -translate-y-1/2 text-sage/50">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
