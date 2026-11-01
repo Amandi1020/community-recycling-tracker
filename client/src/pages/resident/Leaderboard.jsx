@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import Navbar from '../../components/Navbar'
 import axios from '../../utils/axios'
-import { useAuth } from '../../context/AuthContext'
+import { useAuth } from '../../context/authContext'
 import leaderboardImg from '../../assets/illustrations/leaderboard.jpeg'
 
 const levelEmoji = {
