@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import Navbar from '../../components/Navbar'
-import { useAuth } from '../../context/AuthContext'
+import { useAuth } from '../../context/authContext'
 import axios from '../../utils/axios'
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from 'recharts'
 import seedlingIcon from '../../assets/icons/seeding.png'
@@ -162,15 +163,15 @@ const Dashboard = () => {
         <div className="bg-moss/20 rounded-2xl border border-moss/25 p-5">
           <h2 className="font-display text-base font-medium text-charcoal mb-3">Quick actions</h2>
           <div className="grid grid-cols-3 gap-3">
-            <a href="/resident/post" className="bg-forest text-sage text-center text-sm font-medium py-3 rounded-xl hover:bg-forest/90 transition">
+            <Link to="/resident/post" className="bg-forest text-sage text-center text-sm font-medium py-3 rounded-xl hover:bg-forest/90 transition">
               ♻️ Post item
-            </a>
-            <a href="/resident/listings" className="bg-moss text-white text-center text-sm font-medium py-3 rounded-xl hover:bg-moss/90 transition">
+            </Link>
+            <Link to="/resident/listings" className="bg-moss text-white text-center text-sm font-medium py-3 rounded-xl hover:bg-moss/90 transition">
               📋 My listings
-            </a>
-            <a href="/resident/leaderboard" className="bg-clay text-white text-center text-sm font-medium py-3 rounded-xl hover:bg-clay/90 transition">
+            </Link>
+            <Link to="/resident/leaderboard" className="bg-clay text-white text-center text-sm font-medium py-3 rounded-xl hover:bg-clay/90 transition">
               🏆 Leaderboard
-            </a>
+            </Link>
           </div>
         </div>
 

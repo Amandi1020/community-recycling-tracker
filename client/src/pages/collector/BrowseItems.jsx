@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import Navbar from '../../components/Navbar'
-import axios from '../../utils/axios'
+import axios, { mediaUrl } from '../../utils/axios'
 import collectorBrowseImg from '../../assets/illustrations/collector-browse.jpeg'
 
 const BrowseItems = () => {
@@ -8,30 +8,32 @@ const BrowseItems = () => {
   const [loading, setLoading] = useState(true)
   const [filter, setFilter] = useState('all')
   const [claiming, setClaiming] = useState(null)
+  const [error, setError] = useState('')
 
-  useEffect(() => {
-    fetchListings()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  const fetchListings = async () => {
+  const fetchListings = useCallback(async () => {
     try {
       const res = await axios.get('/collector/browse')
-      setListings(res.data)
+      setListings(res.data.data)
+      setError('')
     } catch (err) {
-      console.error(err)
+      setError(err.response?.data?.message || 'Failed to load available items')
     } finally {
       setLoading(false)
     }
-  }
+  }, [])
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    fetchListings()
+  }, [fetchListings])
 
   const handleClaim = async (listingId) => {
     setClaiming(listingId)
     try {
       await axios.post(`/collector/claim/${listingId}`)
-      fetchListings()
+      await fetchListings()
     } catch (err) {
-      console.error(err)
+      setError(err.response?.data?.message || 'Failed to claim item')
     } finally {
       setClaiming(null)
     }
@@ -76,6 +78,12 @@ const BrowseItems = () => {
           </div>
         </div>
 
+        {error && (
+          <div className="bg-clay/10 text-clay border border-clay/20 px-4 py-3 rounded-xl mb-4 text-sm">
+            {error}
+          </div>
+        )}
+
         {/* Filter tabs */}
         <div className="flex gap-2 flex-wrap mb-4">
           {categories.map(cat => (
@@ -105,7 +113,7 @@ const BrowseItems = () => {
                 <div key={listing.id} className="bg-white/60 rounded-xl overflow-hidden sm:flex border border-moss/15">
                   {listing.photo_url && (
                     <img
-                      src={`http://localhost:5000${listing.photo_url}`}
+                      src={mediaUrl(listing.photo_url)}
                       alt={listing.item_name}
                       className="w-full sm:w-28 h-28 object-cover"
                     />
