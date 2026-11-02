@@ -176,7 +176,7 @@ community-recycling-tracker/
 ## ⚙️ Setup & Installation
 
 ### Prerequisites
-- Node.js v18+
+- Node.js v20.19+ or v22.12+ (Vite 8 requirement)
 - MySQL 8+
 - Git
 
@@ -192,50 +192,62 @@ cd server
 npm install
 ```
 
-Create a `.env` file inside `server/`:
-```env
-PORT=5000
-DB_HOST=localhost
-DB_USER=root
-DB_PASSWORD=your_mysql_password
-DB_NAME=recycling_tracker
-JWT_SECRET=your_secret_key
-```
+Create a `.env` file inside `server/` using `server/.env.example` as a template. The server requires `DB_HOST`, `DB_USER`, `DB_NAME` and `JWT_SECRET` (minimum 32 characters). The template documents `NODE_ENV`, `PORT`, `DB_PORT`, `DB_PASSWORD`, `DB_SSL`, `DB_SSL_REJECT_UNAUTHORIZED`, `JWT_EXPIRES_IN`, `CLIENT_URL`, `CORS_ORIGINS`, `UPLOAD_DIR` and `LOG_REQUESTS`.
 
 Create the database in MySQL:
 ```sql
 CREATE DATABASE recycling_tracker;
 ```
 
-Run the schema file in MySQL Workbench to create all tables and seed data:
-`server/config/schema.sql`
+Apply the schema (creates tables and seeds categories/badges):
+```sql
+SOURCE server/config/schema.sql;
+```
+
+For an existing database, run the additive migration instead:
+```sql
+SOURCE server/config/migrations/001_harden_schema.sql;
+```
+If you need to roll it back, review and run `server/config/migrations/001_harden_schema_rollback.sql` (this is destructive).
 
 Start the backend:
 ```bash
 npm run dev
 ```
-Runs at `http://localhost:5000`
+Runs at `http://localhost:5000`. The API is mounted under `/api`.
 
 ### 3. Frontend setup
 ```bash
 cd client
 npm install
+```
+
+Create a `.env` file inside `client/` using `client/.env.example` if needed. Set `VITE_API_URL` to your API base (defaults to `/api` when unset).
+
+```bash
 npm run dev
 ```
-Runs at `http://localhost:5173`
+Runs at `http://localhost:5173`. In development the Vite proxy forwards `/api` to `http://localhost:5000`.
 
-### 4. Create admin account
-
-Run this in MySQL Workbench after setup — generate a bcrypt hash first using the `createAdmin.js` utility:
+### 4. Create an admin account
+Use the bundled script (recommended). Run from the `server` directory:
 ```bash
-cd server
-node createAdmin.js
+npm run create-admin -- "Admin Name" admin@example.com "strong-password" Colombo
 ```
-Or insert directly:
-```sql
-USE recycling_tracker;
-INSERT INTO users (name, email, password_hash, role, district, status)
-VALUES ('Admin', 'admin@ecotrack.com', '<bcrypt_hash>', 'admin', 'Colombo', 'active');
+The password must be between 8 and 72 characters.
+
+### 5. Tests and lint
+Run backend unit tests from `server/`:
+```bash
+npm test
+```
+Run frontend lint from `client/`:
+```bash
+npm run lint
+```
+Build the frontend from `client/`:
+```bash
+npm run build
 ```
 
 ---
