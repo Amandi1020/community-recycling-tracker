@@ -74,11 +74,13 @@ Sri Lanka generates over **7,500 tonnes of solid waste every day**. A significan
 
 | Layer | Technology |
 |---|---|
-| Frontend | React 18 (Vite), Tailwind CSS v4, React Router v6, Recharts, Axios |
-| Backend | Node.js, Express.js |
-| Database | MySQL 8 |
-| Authentication | JWT, bcrypt |
-| File Uploads | Multer |
+| Frontend | React 19.2, React Router 7.17, Vite 8.0, Tailwind CSS 4.3, Recharts 3.8, Axios 1.17 |
+| Backend | Node.js 20.19+ (or 22.12+), Express 5.2 |
+| Database | MySQL 8 with mysql2 3.22 |
+| Authentication | JSON Web Token 9, bcryptjs 3 |
+| File Uploads | Multer 2 — photos stored in MySQL as `LONGBLOB` |
+| Security | Helmet 8, express-rate-limit 8, server-side input validation |
+| Testing | Node.js built-in `node:test` |
 | Fonts | Fraunces (display), Inter (body) — Google Fonts |
 
 ---
@@ -88,6 +90,12 @@ Sri Lanka generates over **7,500 tonnes of solid waste every day**. A significan
 ```
 community-recycling-tracker/
 ├── client/                          # React frontend (Vite)
+│   ├── .env.example                 # VITE_API_URL
+│   ├── eslint.config.js
+│   ├── index.html
+│   ├── package.json
+│   ├── vite.config.js               # Dev proxy for /api
+│   ├── vercel.json
 │   └── src/
 │       ├── assets/
 │       │   ├── illustrations/       # Page hero images
@@ -96,31 +104,62 @@ community-recycling-tracker/
 │       │   ├── Navbar.jsx           # Role-based navigation
 │       │   └── PrivateRoute.jsx     # Route protection
 │       ├── context/
-│       │   └── AuthContext.jsx      # Global auth state
+│       │   ├── authContext.js       # Auth context + useAuth hook
+│       │   └── AuthContext.jsx      # Auth provider and session verification
 │       ├── pages/
-│       │   ├── auth/                # Login, Register
+│       │   ├── auth/                # Login, Register, ForgotPassword, ResetPassword
 │       │   ├── resident/            # Dashboard, PostItem, MyListings, Leaderboard
 │       │   ├── collector/           # Dashboard, BrowseItems, History
-│       │   └── admin/               # Dashboard, Users, Collectors, Categories
-│       └── utils/
-│           └── axios.js             # Axios instance with JWT interceptor
+│       │   └── admin/               # Dashboard, Users, Collectors, Categories, AuditLogs
+│       ├── utils/
+│       │   └── axios.js             # Axios instance with JWT interceptor
+│       ├── App.jsx
+│       ├── index.css
+│       └── main.jsx
 ├── server/                          # Node.js backend
+│   ├── .env.example                 # Server environment template
+│   ├── app.js                       # Express app and middleware
+│   ├── index.js                     # Server startup and graceful shutdown
+│   ├── package.json
 │   ├── config/
 │   │   ├── db.js                    # MySQL connection pool
-│   │   └── schema.sql               # Database schema + seed data
+│   │   ├── env.js                   # Environment parsing and validation
+│   │   ├── schema.sql               # Full schema + seed data
+│   │   └── migrations/
+│   │       ├── 001_harden_schema.sql            # Additive upgrade
+│   │       └── 001_harden_schema_rollback.sql   # Destructive rollback
 │   ├── controllers/
+│   │   ├── adminController.js
 │   │   ├── authController.js
-│   │   ├── residentController.js
 │   │   ├── collectorController.js
-│   │   └── adminController.js
+│   │   ├── listingController.js
+│   │   └── residentController.js
 │   ├── middleware/
-│   │   └── auth.js                  # JWT verification middleware
+│   │   ├── auth.js                  # JWT verification + role checks
+│   │   ├── errorHandler.js
+│   │   ├── isAdmin.js
+│   │   └── rateLimit.js
 │   ├── routes/
+│   │   ├── adminRoutes.js
 │   │   ├── authRoutes.js
-│   │   ├── residentRoutes.js
 │   │   ├── collectorRoutes.js
-│   │   └── adminRoutes.js
-│   └── uploads/                     # Uploaded item photos
+│   │   ├── listingRoutes.js
+│   │   └── residentRoutes.js
+│   ├── scripts/
+│   │   └── createAdmin.js           # Admin account creation utility
+│   ├── tests/
+│   │   ├── gamification.test.js
+│   │   └── validation.test.js
+│   ├── utils/
+│   │   ├── ApiError.js
+│   │   ├── asyncHandler.js
+│   │   ├── audit.js
+│   │   ├── gamification.js
+│   │   ├── logger.js
+│   │   ├── notify.js
+│   │   ├── transaction.js
+│   │   └── validation.js
+│   └── uploads/                     # Optional static upload directory
 └── README.md
 ```
 
