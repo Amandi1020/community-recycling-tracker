@@ -318,12 +318,30 @@ Admin monitors district stats → Approves collectors → Adjusts categories
 
 ---
 
+## 📊 Project Status
+
+EcoTrack is feature-complete locally. Resident, collector and admin flows, authentication, password reset, audit logging, collector ratings and gamification are implemented. Backend unit tests and the frontend lint/build pass.
+
+Deployment is planned; there is no public live demo yet.
+
+### Known gaps
+- No database-backed integration or end-to-end tests yet — the current suite covers validation and gamification utilities only.
+- Item photos are stored as MySQL `LONGBLOB`s; a cloud object store and CDN are recommended before production deployment.
+- Password reset links are only printed in development; production needs an email provider to deliver them.
+
+---
+
+## 🌐 Live Demo
+
+_Coming soon after deployment_
+
+---
+
 ## 🚀 Future Improvements
 
 - Live deployment (Vercel + PlanetScale)
 - Collector service radius selection beyond district level
 - In-app real-time notifications for claimed items
-- Resident-to-collector star ratings
 - PDF monthly impact report export
 - SMS/email notifications via Twilio or EmailJS
 - Mobile app version (React Native)
