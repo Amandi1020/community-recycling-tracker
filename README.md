@@ -27,9 +27,11 @@ Sri Lanka generates over **7,500 tonnes of solid waste every day**. A significan
 ## ✨ Features
 
 ### 🏠 Resident
-- Register and post recyclable items with photos
+- Register and post recyclable items with optional photos
 - Visual category picker with icons (Plastic, Paper, E-Waste, Glass, Metal)
-- Track listing status in real time — available → claimed → collected
+- Track listing status in real time — available → claimed → collected, plus cancelled
+- Edit available listings through the resident API and cancel them from **My Listings**
+- Rate collectors from 1–5 stars after an item is collected
 - Personal impact dashboard with points, level, CO₂ saved and monthly donut chart
 - Earn achievement badges for recycling milestones
 - District leaderboard with podium for top 3 recyclers
@@ -37,11 +39,11 @@ Sri Lanka generates over **7,500 tonnes of solid waste every day**. A significan
 
 ### 🚛 Collector
 - Register (requires admin approval before login)
-- Browse available items filtered by district and category
-- Claim items for pickup with one click
+- Browse available items in your district; the API also supports search and category filters
+- Claim items for pickup with one click and release an active claim
 - Mark items as collected to trigger resident point awards
-- Collection history with stats — total collections, kg collected, pending pickups
-- Collector dashboard with quick actions
+- Collection history with stats — total collections, kg collected, pending pickups and resident ratings
+- Collector dashboard with pending pickups and quick actions
 
 ### ⚙️ Admin
 - System-wide analytics dashboard with 3 charts:
@@ -50,7 +52,8 @@ Sri Lanka generates over **7,500 tonnes of solid waste every day**. A significan
   - 📈 Line chart — monthly recycling trend
 - **Manage Users** — search by name/email/district, filter by role AND status, approve/deactivate/delete accounts
 - **Manage Collectors** — dedicated approval workflow with pending/active/inactive sections
-- **Manage Categories** — edit points per kg and CO₂ coefficients in real time
+- **Manage Categories** — create, edit and delete categories; edit points per kg and CO₂ coefficients
+- **Audit Logs** — review recorded administrative actions with actor, entity and details
 - District breakdown table with recycling stats per area
 - Clickable pending collector alert linking directly to approval page
 
@@ -62,11 +65,16 @@ Sri Lanka generates over **7,500 tonnes of solid waste every day**. A significan
 - District leaderboard with podium, avatar initials and rank medals
 
 ### 🔐 Security
-- JWT authentication with 7-day expiry
+- JWT authentication with configurable expiry (7 days by default)
 - Role-based route protection (resident / collector / admin)
-- Pending and inactive users blocked from logging in
-- bcrypt password hashing
-- Admin-only protected API routes
+- Pending and inactive users blocked from logging in and from using existing tokens
+- Passwords hashed with bcryptjs; changing a password invalidates older tokens
+- Password reset with SHA-256-hashed, single-use tokens that expire after one hour
+- Rate limiting on the API, login, registration and password reset endpoints
+- Helmet security headers and a configurable CORS origin allowlist
+- Server-side input validation, parameterized SQL queries and transactional writes
+- Audit logging for administrative user and category changes
+- Image-only uploads capped at 5 MB and stored in MySQL
 
 ---
 
@@ -239,9 +247,14 @@ VALUES ('Admin', 'admin@ecotrack.com', '<bcrypt_hash>', 'admin', 'Colombo', 'act
 | `users` | Residents, collectors and admins with role, district, points, level and status |
 | `categories` | Recyclable types with points_per_kg and co2_per_kg coefficients |
 | `listings` | Items posted by residents with photo and status tracking |
-| `claims` | Collector pickup records linking listings to collectors |
+| `listing_photos` | Image data stored as MySQL `LONGBLOB` |
+| `claims` | Collector pickup records with award snapshots (`weight_kg`, `points_awarded`, `co2_saved`) |
 | `badges` | Achievement definitions with unlock conditions |
 | `user_badges` | Junction table tracking earned badges per user |
+| `collector_ratings` | One resident rating and optional comment per collected claim |
+| `notifications` | In-app notification records for users and admins |
+| `audit_logs` | Administrative action trail that survives user deletion |
+| `password_reset_tokens` | Hashed, expiring, single-use password reset tokens |
 
 ---
 
