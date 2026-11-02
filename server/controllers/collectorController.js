@@ -69,7 +69,7 @@ export const browseListings = async (req, res) => {
 
   const where = filters.join(' AND ')
 
-  const [rows] = await db.execute(
+  const [rows] = await db.query(
     `SELECT l.*, c.name AS category_name, u.name AS resident_name
      FROM listings l
      JOIN categories c ON c.id = l.category_id
@@ -180,7 +180,7 @@ export const unclaim = async (req, res) => {
 export const getHistory = async (req, res) => {
   const { page, limit, offset } = parsePagination(req.query)
 
-  const [rows] = await db.execute(
+  const [rows] = await db.query(
     `SELECT
        cl.id AS claim_id, cl.status, cl.claimed_at, cl.collected_at,
        l.id AS listing_id, l.item_name, l.weight_kg, l.address, l.available_time, l.photo_url,

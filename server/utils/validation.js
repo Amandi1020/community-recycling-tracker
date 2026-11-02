@@ -70,9 +70,17 @@ export const requireId = (value, field = 'id') => {
   return number
 }
 
+const parseInteger = (value, fallback) => {
+  if (value === undefined || value === null || value === '') {
+    return fallback
+  }
+  const number = Number(value)
+  return Number.isInteger(number) ? number : fallback
+}
+
 export const parsePagination = query => {
-  const page = Math.max(1, Number.parseInt(query.page, 10) || 1)
-  const limit = Math.min(100, Math.max(1, Number.parseInt(query.limit, 10) || 20))
+  const page = Math.max(1, parseInteger(query.page, 1))
+  const limit = Math.min(100, Math.max(1, parseInteger(query.limit, 20)))
   return { page, limit, offset: (page - 1) * limit }
 }
 

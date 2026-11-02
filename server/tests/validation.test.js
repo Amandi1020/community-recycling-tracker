@@ -31,6 +31,14 @@ test('parsePagination clamps page and limit', () => {
   assert.deepEqual(parsePagination({ page: '3', limit: '10' }), { page: 3, limit: 10, offset: 20 })
 })
 
+test('parsePagination applies defaults and rejects non-integer input', () => {
+  assert.deepEqual(parsePagination({}), { page: 1, limit: 20, offset: 0 })
+  assert.deepEqual(parsePagination({ page: 'abc', limit: 'xyz' }), { page: 1, limit: 20, offset: 0 })
+  assert.deepEqual(parsePagination({ page: '-3', limit: '-10' }), { page: 1, limit: 1, offset: 0 })
+  assert.deepEqual(parsePagination({ page: '2', limit: '500' }), { page: 2, limit: 100, offset: 100 })
+  assert.deepEqual(parsePagination({ page: '2.5', limit: '10.5' }), { page: 1, limit: 20, offset: 0 })
+})
+
 test('validateRegister accepts resident input and rejects admin role', () => {
   const data = validateRegister({
     name: ' Test User ',

@@ -109,7 +109,7 @@ export const postListing = async (req, res) => {
 export const getMyListings = async (req, res) => {
   const { page, limit, offset } = parsePagination(req.query)
 
-  const [rows] = await db.execute(
+  const [rows] = await db.query(
     `SELECT
        l.*,
        c.name AS category_name,

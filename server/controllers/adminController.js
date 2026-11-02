@@ -106,7 +106,7 @@ export const getUsers = async (req, res) => {
 
   const where = filters.length > 0 ? `WHERE ${filters.join(' AND ')}` : ''
 
-  const [rows] = await db.execute(
+  const [rows] = await db.query(
     `SELECT id, name, email, role, district, points, level, status, created_at
      FROM users
      ${where}
@@ -329,7 +329,7 @@ export const deleteCategory = async (req, res) => {
 export const getAuditLogs = async (req, res) => {
   const { page, limit, offset } = parsePagination(req.query)
 
-  const [rows] = await db.execute(
+  const [rows] = await db.query(
     `SELECT al.id, al.actor_id, u.name AS actor_name, al.action, al.entity_type,
        al.entity_id, al.details, al.created_at
      FROM audit_logs al
